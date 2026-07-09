@@ -75,7 +75,15 @@ class ApiService {
     } catch (_) {}
   }
 
-  static Future<void> _queuePendingLog(bool isCorrect, List<int> mismatchedPositions) async {
+  static Future<void> _queuePendingLog(
+    bool isCorrect,
+    List<int> mismatchedPositions, {
+    required String bilikId,
+    required int levelId,
+    required double score,
+    double? wer,
+    required int stars,
+  }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final queueStr = prefs.getString('pending_logs') ?? '[]';
@@ -84,6 +92,11 @@ class ApiService {
         'is_correct': isCorrect,
         'mismatched_positions': mismatchedPositions,
         'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'bilik_id': bilikId,
+        'level_id': levelId,
+        'score': score,
+        'wer': wer,
+        'stars': stars,
       });
       await prefs.setString('pending_logs', jsonEncode(queue));
     } catch (_) {}
@@ -136,6 +149,11 @@ class ApiService {
               body: jsonEncode({
                 'is_correct': item['is_correct'],
                 'mismatched_positions': List<int>.from(item['mismatched_positions']),
+                'bilik_id': item['bilik_id'] ?? '',
+                'level_id': item['level_id'] ?? 0,
+                'score': item['score'] ?? (item['is_correct'] == true ? 100.0 : 0.0),
+                'wer': item['wer'],
+                'stars': item['stars'] ?? (item['is_correct'] == true ? 3 : 0),
               }),
             ).timeout(const Duration(seconds: 4));
 
@@ -357,8 +375,13 @@ class ApiService {
 
   static Future<bool> logAttempt(
     bool isCorrect,
-    List<int> mismatchedPositions,
-  ) async {
+    List<int> mismatchedPositions, {
+    required String bilikId,
+    required int levelId,
+    required double score,
+    double? wer,
+    required int stars,
+  }) async {
     try {
       final headers = await _getHeaders();
       final response = await http.post(
@@ -367,12 +390,25 @@ class ApiService {
         body: jsonEncode({
           'is_correct': isCorrect,
           'mismatched_positions': mismatchedPositions,
+          'bilik_id': bilikId,
+          'level_id': levelId,
+          'score': score,
+          'wer': wer,
+          'stars': stars,
         }),
       ).timeout(const Duration(seconds: 4));
       return response.statusCode == 200;
     } catch (e) {
       // Failed to reach backend, queue for background sync
-      await _queuePendingLog(isCorrect, mismatchedPositions);
+      await _queuePendingLog(
+        isCorrect,
+        mismatchedPositions,
+        bilikId: bilikId,
+        levelId: levelId,
+        score: score,
+        wer: wer,
+        stars: stars,
+      );
       return false;
     }
   }
