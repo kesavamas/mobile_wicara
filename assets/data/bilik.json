@@ -1,0 +1,77 @@
+[
+  {
+    "id": "akademik",
+    "title": "Akademik",
+    "icon": "🎓",
+    "iconAsset": "/assets/icons/bilik-akademik.svg",
+    "patternAsset": "/assets/patterns/akademik.svg",
+    "comicAsset": "/assets/comics/akademik.svg",
+    "color": "#3B82F6",
+    "colorTheme": {
+      "soft": "#EFF6FF",
+      "border": "#BFDBFE",
+      "ink": "#1D4ED8"
+    },
+    "description": "Izin, tugas, dan bicara formal dengan guru/dosen"
+  },
+  {
+    "id": "mobilitas",
+    "title": "Mobilitas",
+    "icon": "🚌",
+    "iconAsset": "/assets/icons/bilik-mobilitas.svg",
+    "patternAsset": "/assets/patterns/mobilitas.svg",
+    "comicAsset": "/assets/comics/mobilitas.svg",
+    "color": "#06B6D4",
+    "colorTheme": {
+      "soft": "#ECFEFF",
+      "border": "#A5F3FC",
+      "ink": "#0E7490"
+    },
+    "description": "Naik transportasi umum, tanya arah, lapor kehilangan"
+  },
+  {
+    "id": "kesehatan",
+    "title": "Kesehatan",
+    "icon": "🏥",
+    "iconAsset": "/assets/icons/bilik-kesehatan.svg",
+    "patternAsset": "/assets/patterns/kesehatan.svg",
+    "comicAsset": "/assets/comics/kesehatan.svg",
+    "color": "#10B981",
+    "colorTheme": {
+      "soft": "#F0FDF4",
+      "border": "#BBF7D0",
+      "ink": "#047857"
+    },
+    "description": "Periksa ke dokter, ceritakan gejala, ikuti anjuran"
+  },
+  {
+    "id": "profesional",
+    "title": "Profesional",
+    "icon": "💼",
+    "iconAsset": "/assets/icons/bilik-profesional.svg",
+    "patternAsset": "/assets/patterns/profesional.svg",
+    "comicAsset": "/assets/comics/profesional.svg",
+    "color": "#8B5CF6",
+    "colorTheme": {
+      "soft": "#F5F3FF",
+      "border": "#DDD6FE",
+      "ink": "#6D28D9"
+    },
+    "description": "Wawancara kerja dan bicara formal dengan atasan"
+  },
+  {
+    "id": "transaksi-jasa",
+    "title": "Transaksi & Jasa",
+    "icon": "🏦",
+    "iconAsset": "/assets/icons/bilik-transaksi.svg",
+    "patternAsset": "/assets/patterns/transaksi-jasa.svg",
+    "comicAsset": "/assets/comics/transaksi-jasa.svg",
+    "color": "#F59E0B",
+    "colorTheme": {
+      "soft": "#FFFBEB",
+      "border": "#FDE68A",
+      "ink": "#B45309"
+    },
+    "description": "Belanja, bank, dan mengurus layanan di kantor pemerintahan"
+  }
+]

@@ -1,0 +1,550 @@
+{
+  "akademik": [
+    {
+      "id": 1,
+      "title": "Izin Tidak Hadir",
+      "comic": {
+        "narration": "Kamu sedang sakit parah dan tidak bisa bangun dari tempat tidur. Kamu harus memberitahu dosen.",
+        "speechBubble": null,
+        "imagePath": "/comics/dosen/step-1.png"
+      },
+      "tokens": [
+        "sakit.",
+        "karena",
+        "tidak hadir",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "tidak hadir",
+        "O": "",
+        "K": "karena sakit"
+      },
+      "explanation": "Susunan formal: Saya tidak hadir karena sakit."
+    },
+    {
+      "id": 2,
+      "title": "Janji Kumpul Tugas",
+      "comic": {
+        "narration": "Dosen membalas:",
+        "speechBubble": "Semoga cepat sembuh. Tapi kamu harus menyerahkan tugas minggu ini.",
+        "imagePath": "/comics/dosen/step-2.png"
+      },
+      "tokens": [
+        "mengumpulkan",
+        "besok.",
+        "tugas",
+        "akan",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "akan mengumpulkan",
+        "O": "tugas",
+        "K": "besok"
+      },
+      "explanation": "Susunan formal: Saya akan mengumpulkan tugas besok."
+    },
+    {
+      "id": 3,
+      "title": "Tugas Kelompok",
+      "comic": {
+        "narration": "Dosen bertanya:",
+        "speechBubble": "Apakah kamu sudah mengerjakan tugas kelompok bersama teman-temanmu?",
+        "imagePath": "/comics/dosen/step-3.png"
+      },
+      "tokens": [
+        "sudah",
+        "bersama.",
+        "tugas",
+        "mengerjakan",
+        "Kami"
+      ],
+      "spok_answer": {
+        "S": "Kami",
+        "P": "sudah mengerjakan",
+        "O": "tugas",
+        "K": "bersama"
+      },
+      "explanation": "Susunan formal: Kami sudah mengerjakan tugas bersama."
+    },
+    {
+      "id": 4,
+      "title": "Kirim Tugas Lewat Email",
+      "comic": {
+        "narration": "Dosen:",
+        "speechBubble": "Baiklah, kirimkan filenya ke email saya ya.",
+        "imagePath": "/comics/dosen/step-4.png"
+      },
+      "tokens": [
+        "ini.",
+        "mengirim",
+        "email",
+        "malam",
+        "akan",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "akan mengirim",
+        "O": "email",
+        "K": "malam ini"
+      },
+      "explanation": "Susunan formal: Saya akan mengirim email malam ini."
+    },
+    {
+      "id": 5,
+      "title": "Ucapan Terima Kasih",
+      "comic": {
+        "narration": "Dosen membalas kembali:",
+        "speechBubble": "Email sudah saya terima. Beristirahatlah dengan baik.",
+        "imagePath": "/comics/dosen/step-5.png"
+      },
+      "tokens": [
+        "banyak.",
+        "mengucapkan",
+        "terima kasih",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "mengucapkan",
+        "O": "terima kasih",
+        "K": "banyak"
+      },
+      "explanation": "Susunan formal: Saya mengucapkan terima kasih banyak."
+    },
+    {
+      "id": 6,
+      "title": "Menutup Percakapan",
+      "comic": {
+        "narration": "Urusan selesai. Kamu merasa lega karena berhasil berkomunikasi dengan sopan.",
+        "speechBubble": null,
+        "imagePath": "/comics/dosen/step-6.png"
+      },
+      "tokens": [
+        "tenang.",
+        "beristirahat",
+        "dengan",
+        "bisa",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "bisa beristirahat",
+        "O": "",
+        "K": "dengan tenang"
+      },
+      "explanation": "Susunan formal: Saya bisa beristirahat dengan tenang."
+    }
+  ],
+  "profesional": [
+    {
+      "id": 1,
+      "title": "Cerita Pengalaman Kerja",
+      "comic": {
+        "narration": "Kamu sedang berada di ruang wawancara. HRD bertanya, 'Ceritakan tentang pengalaman Anda.'",
+        "speechBubble": null,
+        "imagePath": "/comics/kerja/step-1.png"
+      },
+      "tokens": [
+        "bekerja",
+        "di perusahaan",
+        "pernah",
+        "teknologi.",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "pernah bekerja",
+        "O": "",
+        "K": "di perusahaan teknologi"
+      },
+      "explanation": "Susunan formal: Saya pernah bekerja di perusahaan teknologi."
+    },
+    {
+      "id": 2,
+      "title": "Tugas Sehari-hari",
+      "comic": {
+        "narration": "HRD melanjutkan:",
+        "speechBubble": "Apa yang biasa Anda kerjakan di sana?",
+        "imagePath": "/comics/kerja/step-2.png"
+      },
+      "tokens": [
+        "setiap hari.",
+        "membuat",
+        "Saya",
+        "desain",
+        "aplikasi"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "membuat",
+        "O": "desain aplikasi",
+        "K": "setiap hari"
+      },
+      "explanation": "Susunan formal: Saya membuat desain aplikasi setiap hari."
+    },
+    {
+      "id": 3,
+      "title": "Kesediaan Lembur",
+      "comic": {
+        "narration": "HRD bertanya tentang kesediaan waktu:",
+        "speechBubble": "Apakah Anda bersedia bekerja lembur?",
+        "imagePath": "/comics/kerja/step-3.png"
+      },
+      "tokens": [
+        "pada",
+        "bersedia",
+        "akhir pekan.",
+        "lembur",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "bersedia lembur",
+        "O": "",
+        "K": "pada akhir pekan"
+      },
+      "explanation": "Susunan formal: Saya bersedia lembur pada akhir pekan."
+    },
+    {
+      "id": 4,
+      "title": "Ekspektasi Gaji",
+      "comic": {
+        "narration": "HRD mengangguk puas:",
+        "speechBubble": "Berapa ekspektasi gaji Anda?",
+        "imagePath": "/comics/kerja/step-4.png"
+      },
+      "tokens": [
+        "perusahaan.",
+        "mengharapkan",
+        "gaji",
+        "sesuai standar",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "mengharapkan",
+        "O": "gaji",
+        "K": "sesuai standar perusahaan"
+      },
+      "explanation": "Susunan formal: Saya mengharapkan gaji sesuai standar perusahaan."
+    },
+    {
+      "id": 5,
+      "title": "Menunggu Kabar",
+      "comic": {
+        "narration": "HRD menutup buku catatannya:",
+        "speechBubble": "Baik, kami akan menghubungi Anda minggu depan.",
+        "imagePath": "/comics/kerja/step-5.png"
+      },
+      "tokens": [
+        "menunggu",
+        "dari Bapak.",
+        "kabar",
+        "akan",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "akan menunggu",
+        "O": "kabar",
+        "K": "dari Bapak"
+      },
+      "explanation": "Susunan formal: Saya akan menunggu kabar dari Bapak."
+    },
+    {
+      "id": 6,
+      "title": "Menutup Wawancara",
+      "comic": {
+        "narration": "Wawancara berjalan lancar, dan kalian berjabat tangan.",
+        "speechBubble": null,
+        "imagePath": "/comics/kerja/step-6.png"
+      },
+      "tokens": [
+        "terima kasih.",
+        "banyak",
+        "mengucapkan",
+        "Saya"
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "mengucapkan",
+        "O": "banyak terima kasih",
+        "K": ""
+      },
+      "explanation": "Susunan formal: Saya mengucapkan banyak terima kasih."
+    }
+  ],
+  "kesehatan": [
+    {
+      "id": 1,
+      "title": "Mendaftar di Rumah Sakit",
+      "comic": {
+        "narration": "Nina demam sejak pagi dan pergi ke rumah sakit untuk mendaftar periksa.",
+        "speechBubble": "Selamat pagi, ada keluhan apa?",
+        "imagePath": "/comics/kesehatan/level-1.png"
+      },
+      "tokens": [
+        "Saya",
+        "ingin periksa",
+        "karena",
+        "demam."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "ingin periksa",
+        "O": "",
+        "K": "karena demam"
+      },
+      "explanation": "Susunan formal: Saya ingin periksa karena demam."
+    },
+    {
+      "id": 2,
+      "title": "Menjelaskan Gejala",
+      "comic": {
+        "narration": "Dokter bertanya sudah berapa lama gejalanya muncul.",
+        "speechBubble": "Sudah berapa lama gejala ini muncul?",
+        "imagePath": "/comics/kesehatan/level-2.png"
+      },
+      "tokens": [
+        "Saya",
+        "sudah merasa",
+        "gejala ini",
+        "sejak dua hari lalu."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "sudah merasa",
+        "O": "gejala ini",
+        "K": "sejak dua hari lalu"
+      },
+      "explanation": "Susunan formal: Saya sudah merasa gejala ini sejak dua hari lalu."
+    },
+    {
+      "id": 3,
+      "title": "Menerima Anjuran Obat",
+      "comic": {
+        "narration": "Dokter memberi resep dan menjelaskan cara minum obatnya.",
+        "speechBubble": "Minumlah obat ini tiga kali sehari setelah makan.",
+        "imagePath": "/comics/kesehatan/level-3.png"
+      },
+      "tokens": [
+        "Saya",
+        "akan minum",
+        "obat",
+        "sesuai anjuran dokter."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "akan minum",
+        "O": "obat",
+        "K": "sesuai anjuran dokter"
+      },
+      "explanation": "Susunan formal: Saya akan minum obat sesuai anjuran dokter."
+    },
+    {
+      "id": 4,
+      "title": "Izin Tidak Masuk Sekolah",
+      "comic": {
+        "narration": "Sesampainya di rumah, Nina mengirim pesan izin ke wali kelasnya.",
+        "speechBubble": null,
+        "imagePath": "/comics/kesehatan/level-4.png"
+      },
+      "tokens": [
+        "Saya",
+        "izin tidak masuk",
+        "sekolah",
+        "karena sakit."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "izin tidak masuk",
+        "O": "sekolah",
+        "K": "karena sakit"
+      },
+      "explanation": "Susunan formal: Saya izin tidak masuk sekolah karena sakit."
+    }
+  ],
+  "mobilitas": [
+    {
+      "id": 1,
+      "title": "Bertanya Tempat Turun",
+      "comic": {
+        "narration": "Nina naik bus umum dan belum tahu di mana harus turun.",
+        "speechBubble": "Mau turun di mana, Dek?",
+        "imagePath": "/comics/mobilitas/level-1.png"
+      },
+      "tokens": [
+        "Saya",
+        "ingin turun",
+        "di depan",
+        "stasiun."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "ingin turun",
+        "O": "",
+        "K": "di depan stasiun"
+      },
+      "explanation": "Susunan formal: Saya ingin turun di depan stasiun."
+    },
+    {
+      "id": 2,
+      "title": "Menunggu di Halte",
+      "comic": {
+        "narration": "Bus yang ditunggu belum juga datang, Nina menunggu dengan sabar di halte.",
+        "speechBubble": null,
+        "imagePath": "/comics/mobilitas/level-2.png"
+      },
+      "tokens": [
+        "Saya",
+        "menunggu",
+        "bus berikutnya",
+        "di halte ini."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "menunggu",
+        "O": "bus berikutnya",
+        "K": "di halte ini"
+      },
+      "explanation": "Susunan formal: Saya menunggu bus berikutnya di halte ini."
+    },
+    {
+      "id": 3,
+      "title": "Melapor Barang Hilang",
+      "comic": {
+        "narration": "Nina sadar dompetnya tertinggal di kursi bus dan melapor ke petugas.",
+        "speechBubble": "Ada yang bisa saya bantu?",
+        "imagePath": "/comics/mobilitas/level-3.png"
+      },
+      "tokens": [
+        "Saya",
+        "kehilangan",
+        "dompet",
+        "di dalam bus tadi."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "kehilangan",
+        "O": "dompet",
+        "K": "di dalam bus tadi"
+      },
+      "explanation": "Susunan formal: Saya kehilangan dompet di dalam bus tadi."
+    },
+    {
+      "id": 4,
+      "title": "Meminta Izin Naik Duluan",
+      "comic": {
+        "narration": "Karena hampir terlambat sekolah, Nina meminta izin naik lebih dulu di barisan antre.",
+        "speechBubble": null,
+        "imagePath": "/comics/mobilitas/level-4.png"
+      },
+      "tokens": [
+        "Saya",
+        "mohon izin naik",
+        "lebih dulu",
+        "karena terburu-buru."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "mohon izin naik",
+        "O": "",
+        "K": "lebih dulu karena terburu-buru"
+      },
+      "explanation": "Susunan formal: Saya mohon izin naik lebih dulu karena terburu-buru."
+    }
+  ],
+  "transaksi-jasa": [
+    {
+      "id": 1,
+      "title": "Bertanya Harga di Toko",
+      "comic": {
+        "narration": "Nina melihat baju yang disukainya di toko, tapi tidak ada label harga.",
+        "speechBubble": "Selamat datang, ada yang bisa dibantu?",
+        "imagePath": "/comics/transaksi-jasa/level-1.png"
+      },
+      "tokens": [
+        "Saya",
+        "ingin bertanya",
+        "harga",
+        "baju ini."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "ingin bertanya",
+        "O": "harga baju ini",
+        "K": ""
+      },
+      "explanation": "Susunan formal: Saya ingin bertanya harga baju ini."
+    },
+    {
+      "id": 2,
+      "title": "Melapor Kartu Tertelan ATM",
+      "comic": {
+        "narration": "Kartu ATM Nina tertelan mesin saat mengambil uang di bank.",
+        "speechBubble": "Ada kendala apa, Dek?",
+        "imagePath": "/comics/transaksi-jasa/level-2.png"
+      },
+      "tokens": [
+        "Kartu saya",
+        "tertelan",
+        "di mesin ATM",
+        "tadi."
+      ],
+      "spok_answer": {
+        "S": "Kartu saya",
+        "P": "tertelan",
+        "O": "",
+        "K": "di mesin ATM tadi"
+      },
+      "explanation": "Susunan formal: Kartu saya tertelan di mesin ATM tadi."
+    },
+    {
+      "id": 3,
+      "title": "Mengurus KTP Hilang",
+      "comic": {
+        "narration": "Nina kehilangan KTP-nya dan datang ke kantor kelurahan untuk melapor.",
+        "speechBubble": "Silakan, ada yang bisa dibantu?",
+        "imagePath": "/comics/transaksi-jasa/level-3.png"
+      },
+      "tokens": [
+        "Saya",
+        "ingin melaporkan",
+        "kehilangan",
+        "KTP saya."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "ingin melaporkan",
+        "O": "kehilangan KTP saya",
+        "K": ""
+      },
+      "explanation": "Susunan formal: Saya ingin melaporkan kehilangan KTP saya."
+    },
+    {
+      "id": 4,
+      "title": "Menukar Barang Rusak",
+      "comic": {
+        "narration": "Barang yang dibeli Nina kemarin ternyata rusak, ia kembali ke toko untuk komplain.",
+        "speechBubble": null,
+        "imagePath": "/comics/transaksi-jasa/level-4.png"
+      },
+      "tokens": [
+        "Saya",
+        "ingin menukar",
+        "barang ini",
+        "karena rusak."
+      ],
+      "spok_answer": {
+        "S": "Saya",
+        "P": "ingin menukar",
+        "O": "barang ini",
+        "K": "karena rusak"
+      },
+      "explanation": "Susunan formal: Saya ingin menukar barang ini karena rusak."
+    }
+  ]
+}
