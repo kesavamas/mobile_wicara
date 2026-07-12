@@ -1,21 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wicara_application_1/screens/main_layout.dart';
 import 'package:wicara_application_1/screens/login_screen.dart';
-import 'package:wicara_application_1/screens/home_screen.dart';
+import 'package:wicara_application_1/screens/onboarding_screen.dart';
 import 'package:wicara_application_1/services/session_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final loggedIn = await SessionService.isLoggedIn();
+  
+  final prefs = await SharedPreferences.getInstance();
+  final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
 
-  runApp(MyApp(isLoggedIn: loggedIn));
+  runApp(MyApp(
+    isLoggedIn: loggedIn,
+    showOnboarding: !onboardingCompleted,
+  ));
 }
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
+  final bool showOnboarding;
 
-  const MyApp({super.key, required this.isLoggedIn});
+  const MyApp({
+    super.key,
+    required this.isLoggedIn,
+    required this.showOnboarding,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +68,9 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: isLoggedIn ? const HomeScreen() : const LoginScreen(),
+      home: showOnboarding
+          ? const OnboardingScreen()
+          : (isLoggedIn ? const MainLayout() : const LoginScreen()),
     );
   }
 }

@@ -7,6 +7,8 @@ import 'package:wicara_application_1/services/api_service.dart';
 import 'package:wicara_application_1/services/session_service.dart';
 import 'package:wicara_application_1/screens/login_screen.dart';
 import 'package:wicara_application_1/screens/level_map_screen.dart';
+import 'package:wicara_application_1/screens/focus_screen.dart';
+import 'package:wicara_application_1/widgets/wika_mascot.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -67,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           'Keluar aplikasi',
           style: GoogleFonts.plusJakartaSans(fontWeight: FontWeight.w800),
@@ -396,341 +399,819 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F7F2),
-      body: SafeArea(
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : RefreshIndicator(
-                onRefresh: _refreshProgress,
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+      backgroundColor: const Color(0xFFEEF3FF),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: _refreshProgress,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Redesigned Hero Section with curved bottom
+                    _buildHeroSection(),
+
+                    // Main tab contents
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 24, 20, 110), // Padding-bottom holds space for nav bar
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GestureDetector(
-                            onTap: _openEditProfileSheet,
-                            child: Container(
-                              width: 52,
-                              height: 52,
-                              decoration: BoxDecoration(
-                                color: _parseColor(
-                                  _avatar['color'] ?? '#3B82F6',
-                                ).withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(18),
-                                border: Border.all(color: Colors.white, width: 2),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  getAvatarIcon(_avatar['emoji'] ?? 'face'),
-                                  size: 26,
-                                  color: _parseColor(_avatar['color'] ?? '#3B82F6'),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Halo, $_studentId',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 19,
-                                    fontWeight: FontWeight.w900,
-                                    color: const Color(0xFF0F172A),
+                          // Toolkit Actions Grid Row
+                          _buildToolkitRow(),
+                          const SizedBox(height: 28),
+
+                          // Pillow Bilik Belajar Header
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Pilih Bilik Belajar',
+                                    style: GoogleFonts.plusJakartaSans(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w800,
+                                      color: const Color(0xFF1F2858),
+                                    ),
                                   ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${_biliks.length - _progress.where((p) => p.status == 'completed').map((p) => p.bilikId).toSet().length} bilik tersisa',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF5D6785),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFEDE7FF),
+                                  borderRadius: BorderRadius.circular(999),
                                 ),
-                                Text(
-                                  'Pilih bilik dan lanjutkan latihanmu',
+                                child: Text(
+                                  '✨ Baru',
                                   style: GoogleFonts.inter(
-                                    fontSize: 12,
-                                    color: const Color(0xFF64748B),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w800,
+                                    color: const Color(0xFF8C6CFF),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            tooltip: 'Keluar',
-                            onPressed: _handleLogout,
-                            icon: const Icon(Icons.logout_rounded),
-                            color: const Color(0xFF475569),
-                            style: IconButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
                               ),
-                            ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Bilik room list cards
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _biliks.length,
+                            separatorBuilder: (context, index) => const SizedBox(height: 16),
+                            itemBuilder: (context, index) {
+                              final bilik = _biliks[index];
+                              final completed = _getCompletedCount(bilik.id);
+                              final totalLevels = _levelCounts[bilik.id] ?? 0;
+                              return _buildRoomCard(bilik, completed, totalLevels);
+                            },
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF0F172A),
-                          borderRadius: BorderRadius.circular(28),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF0F172A).withOpacity(0.18),
-                              blurRadius: 26,
-                              offset: const Offset(0, 14),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.12),
-                                    borderRadius: BorderRadius.circular(999),
-                                  ),
-                                  child: Text(
-                                    'PROGRES BELAJAR',
-                                    style: GoogleFonts.inter(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w900,
-                                      color: const Color(0xFFFDE68A),
-                                    ),
-                                  ),
-                                ),
-                                const Spacer(),
-                                const Icon(
-                                  Icons.auto_awesome_rounded,
-                                  color: Color(0xFFF59E0B),
-                                  size: 22,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 18),
-                            Text(
-                              '$_totalCompleted dari $_totalLevels level selesai',
-                              style: GoogleFonts.plusJakartaSans(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(999),
-                              child: LinearProgressIndicator(
-                                minHeight: 9,
-                                value: _totalLevels == 0
-                                    ? 0
-                                    : _totalCompleted / _totalLevels,
-                                backgroundColor: Colors.white.withOpacity(0.16),
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                  Color(0xFFF59E0B),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Susun kalimat formal lewat cerita singkat, lalu lihat pola SPOK-nya dengan jelas.',
-                              style: GoogleFonts.inter(
-                                color: Colors.white.withOpacity(0.78),
-                                fontSize: 13,
-                                height: 1.45,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        'Bilik latihan',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          color: const Color(0xFF0F172A),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _biliks.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 12),
-                        itemBuilder: (context, index) {
-                          final bilik = _biliks[index];
-                          final completed = _getCompletedCount(bilik.id);
-                          final totalLevels = _levelCounts[bilik.id] ?? 0;
-                          final progressPct = totalLevels == 0
-                              ? 0.0
-                              : completed / totalLevels;
-                          final brandColor = _parseColor(bilik.color);
-                          final softBgColor = _parseColor(
-                            bilik.colorTheme.soft,
-                          );
-                          final inkColor = _parseColor(bilik.colorTheme.ink);
+                    ),
+                  ],
+                ),
+              ),
+            ),
+    );
+  }
 
-                          return InkWell(
-                            onTap: () async {
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LevelMapScreen(
-                                    bilik: bilik,
-                                    totalLevels: totalLevels,
-                                  ),
-                                ),
-                              );
-                              _refreshProgress();
-                            },
-                            borderRadius: BorderRadius.circular(24),
-                            child: Ink(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
-                                border: Border.all(
-                                  color: _parseColor(bilik.colorTheme.border),
-                                  width: 1.2,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: brandColor.withOpacity(0.08),
-                                    blurRadius: 22,
-                                    offset: const Offset(0, 10),
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 66,
-                                    height: 74,
-                                    decoration: BoxDecoration(
-                                      color: softBgColor,
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        color: brandColor.withOpacity(0.12),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        bilik.icon,
-                                        style: const TextStyle(fontSize: 31),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 14),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                bilik.title,
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style:
-                                                    GoogleFonts.plusJakartaSans(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w900,
-                                                      color: const Color(
-                                                        0xFF0F172A,
-                                                      ),
-                                                    ),
-                                              ),
-                                            ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 8,
-                                                    vertical: 4,
-                                                  ),
-                                              decoration: BoxDecoration(
-                                                color: brandColor.withOpacity(
-                                                  0.1,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(999),
-                                              ),
-                                              child: Text(
-                                                '$completed/$totalLevels',
-                                                style: GoogleFonts.inter(
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.w900,
-                                                  color: inkColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          bilik.description,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.inter(
-                                            fontSize: 12,
-                                            color: const Color(0xFF64748B),
-                                            height: 1.35,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 11),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(999),
-                                                child: LinearProgressIndicator(
-                                                  minHeight: 7,
-                                                  value: progressPct,
-                                                  backgroundColor: const Color(
-                                                    0xFFE2E8F0,
-                                                  ),
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                        Color
-                                                      >(brandColor),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Icon(
-                                              Icons.chevron_right_rounded,
-                                              color: brandColor,
-                                              size: 22,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
+  Widget _buildHeroSection() {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Color(0xFF4C5FD7),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(40),
+          bottomRight: Radius.circular(40),
+        ),
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 60, 20, 36),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Content
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // User Greeting Pill Badge
+              GestureDetector(
+                onTap: _openEditProfileSheet,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.16),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        getAvatarIcon(_avatar['emoji'] ?? 'face'),
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '👋 Halo, $_studentId!',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+
+              // Title text
+              Text(
+                'Hari ini mau\nberlatih di mana?',
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 27,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  height: 1.2,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Motivational bubble description
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.14),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('✨ ', style: TextStyle(fontSize: 14)),
+                    Text(
+                      'Yuk, lanjutkan petualangan\nkomunikasimu.',
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white.withOpacity(0.85),
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Mini Journey Path Info Row
+              Row(
+                children: [
+                  Row(
+                    children: List.generate(3, (index) {
+                      final done = index < _totalCompleted;
+                      return Row(
+                        children: [
+                          Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: done ? const Color(0xFFFFC95A) : Colors.white.withOpacity(0.18),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: done ? const Color(0xFFFFC95A) : Colors.white.withOpacity(0.12),
+                                width: 2,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                done ? '✓' : '${index + 1}',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w900,
+                                  color: done ? const Color(0xFF5C3C00) : Colors.white.withOpacity(0.5),
+                                ),
+                              ),
+                            ),
+                          ),
+                          if (index < 2)
+                            Container(
+                              width: 24,
+                              height: 2,
+                              color: done ? const Color(0xFFFFC95A) : Colors.white.withOpacity(0.32),
+                            ),
+                        ],
+                      );
+                    }),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    '$_totalCompleted misi selesai',
+                    style: GoogleFonts.inter(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white.withOpacity(0.7),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+
+          // Bouncing Wika Mascot overlapped
+          Positioned(
+            right: 0,
+            bottom: -60,
+            child: const WikaMascot(
+              mood: WikaMood.welcome,
+              size: 112,
+              animated: true,
+            ),
+          ),
+
+          // Logout Button
+          Positioned(
+            right: 0,
+            top: 0,
+            child: IconButton(
+              onPressed: _handleLogout,
+              icon: const Icon(Icons.logout_rounded, color: Colors.white70),
+              tooltip: 'Keluar',
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _buildToolkitRow() {
+    // Determine level dynamically based on completed count
+    final int level = (_totalCompleted / 3).floor() + 1;
+    final int xp = _totalCompleted * 50;
+    final int nextLevelXp = level * 150;
+    final double levelPct = (xp / nextLevelXp).clamp(0.0, 1.0);
+
+    return Row(
+      children: [
+        // Level Progress Card
+        Expanded(
+          flex: 5,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: const Color(0xFFDDE2F0)),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1F2858).withOpacity(0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6C4FD3),
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF6C4FD3).withOpacity(0.28),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      'L$level',
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(999),
+                        child: LinearProgressIndicator(
+                          minHeight: 5,
+                          value: levelPct,
+                          backgroundColor: const Color(0xFFE8EBF4),
+                          valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF4C5FD7)),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$xp / $nextLevelXp XP',
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF5D6785),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+
+        // Focus Mode Capsule
+        Expanded(
+          flex: 3,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FocusScreen()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF7E1),
+                borderRadius: BorderRadius.circular(22),
+                border: Border.all(color: const Color(0xFFE5C56D)),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF1F2858).withOpacity(0.08),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.crop_free_rounded,
+                    size: 14,
+                    color: Color(0xFFFFD36A),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    'Focus',
+                    style: GoogleFonts.plusJakartaSans(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF6A4C00),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+
+        // Streak Count Capsule
+        Expanded(
+          flex: 4,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            decoration: BoxDecoration(
+              color: const Color(0xFF3445AC),
+              borderRadius: BorderRadius.circular(22),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF3445AC).withOpacity(0.28),
+                  blurRadius: 14,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'AKTIF',
+                      style: GoogleFonts.inter(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.0,
+                        color: const Color(0xFFDDE4FF),
+                      ),
+                    ),
+                    Text(
+                      '2 hari',
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                const Icon(
+                  Icons.local_fire_department_rounded,
+                  color: Color(0xFFFFD36A),
+                  size: 22,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRoomCard(Bilik bilik, int completed, int totalLevels) {
+    final brandColor = _parseColor(bilik.color);
+    final isSchool = bilik.id == 'akademik';
+    final progressPct = totalLevels == 0 ? 0.0 : completed / totalLevels;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4B5DFF).withOpacity(0.12),
+            blurRadius: 40,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Illustration scene container
+          Container(
+            height: 158,
+            decoration: BoxDecoration(
+              color: isSchool ? const Color(0xFFEEF3FF) : const Color(0xFFF3EFFF),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            ),
+            child: Stack(
+              children: [
+                // Right aligned SVG-like vector decoration based on Bilik
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: _buildRoomIllustration(bilik.id),
+                ),
+
+                // Card info details
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Badges row
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: brandColor,
+                              borderRadius: BorderRadius.circular(999),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: brandColor.withOpacity(0.38),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  bilik.icon,
+                                  style: const TextStyle(fontSize: 11),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '$totalLevels Kasus',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.68),
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(color: Colors.white.withOpacity(0.55)),
+                            ),
+                            child: Text(
+                              completed < totalLevels ? '1 Terbuka' : 'Selesai',
+                              style: GoogleFonts.inter(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF5D6785),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Room Title
+                      Text(
+                        bilik.title,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 23,
+                          fontWeight: FontWeight.w800,
+                          color: isSchool ? const Color(0xFF1F2858) : const Color(0xFF2D1B6E),
+                          height: 1.1,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+
+                      // Room Desc
+                      SizedBox(
+                        width: 178,
+                        child: Text(
+                          bilik.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: isSchool ? const Color(0xFF3A4A7A) : const Color(0xFF4A3080),
+                            height: 1.4,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Footer info row
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(28)),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '⭐ +50 XP per misi',
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w800,
+                        color: const Color(0xFFFFC95A),
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      progressPct >= 1.0 ? 'Bilik Selesai' : 'Misi berikutnya siap',
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF5D6785),
+                      ),
+                    ),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LevelMapScreen(
+                          bilik: bilik,
+                          totalLevels: totalLevels,
+                        ),
+                      ),
+                    );
+                    _refreshProgress();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: brandColor,
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: [
+                        BoxShadow(
+                          color: brandColor.withOpacity(0.35),
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          progressPct >= 1.0 ? 'Jelajahi Bilik' : 'Mulai Petualangan',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 15,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRoomIllustration(String bilikId) {
+    // Generate simplified visual representation matching SVG curves
+    if (bilikId == 'akademik') {
+      return Container(
+        width: 180,
+        height: 158,
+        child: Stack(
+          children: [
+            // Cloud 1
+            Positioned(
+              left: 20,
+              top: 20,
+              child: Opacity(
+                opacity: 0.68,
+                child: Container(
+                  width: 44,
+                  height: 24,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            // Cloud 2
+            Positioned(
+              right: 20,
+              top: 10,
+              child: Opacity(
+                opacity: 0.48,
+                child: Container(
+                  width: 32,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                ),
+              ),
+            ),
+            // School Building block
+            Positioned(
+              right: 15,
+              bottom: 20,
+              child: Container(
+                width: 76,
+                height: 78,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF4B5DFF).withOpacity(0.88),
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: Stack(
+                  children: [
+                    // Doors
+                    Positioned(
+                      bottom: 0,
+                      left: 27,
+                      child: Container(
+                        width: 22,
+                        height: 28,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.52),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(5)),
+                        ),
+                      ),
+                    ),
+                    // Windows
+                    Positioned(
+                      top: 16,
+                      left: 10,
+                      child: Row(
+                        children: List.generate(3, (index) => Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                          width: 14,
+                          height: 13,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.75),
+                            borderRadius: BorderRadius.circular(3.5),
+                          ),
+                        )),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // Tree
+            Positioned(
+              right: 90,
+              bottom: 20,
+              child: Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF72D7B2).withOpacity(0.92),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container(
+        width: 180,
+        height: 158,
+        child: Stack(
+          children: [
+            // Building Block
+            Positioned(
+              right: 15,
+              bottom: 10,
+              child: Container(
+                width: 76,
+                height: 132,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8C6CFF).withOpacity(0.82),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(4, (index) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(3, (idx) => Container(
+                      width: 12,
+                      height: 15,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(index < 2 ? 0.55 : 0.22),
+                        borderRadius: BorderRadius.circular(3.5),
+                      ),
+                    )),
+                  )),
+                ),
+              ),
+            ),
+            // Laptop Block
+            Positioned(
+              left: 20,
+              bottom: 15,
+              child: Container(
+                width: 58,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6240BE).withOpacity(0.74),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

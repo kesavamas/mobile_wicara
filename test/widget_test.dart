@@ -12,7 +12,7 @@ import 'package:wicara_application_1/main.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp(isLoggedIn: false));
+    await tester.pumpWidget(const MyApp(isLoggedIn: false, showOnboarding: false));
 
     // Verify that our login screen is shown.
     expect(find.text('WICARA'), findsOneWidget);
