@@ -2,7 +2,7 @@
   "akademik": [
     {
       "id": 1,
-      "title": "Izin Tidak Hadir",
+      "title": "Izin Sakit ke Wali Kelas",
       "comic": {
         "narration": "Kamu sedang sakit parah dan tidak bisa bangun dari tempat tidur. Kamu harus memberitahu dosen.",
         "speechBubble": null,
@@ -24,7 +24,7 @@
     },
     {
       "id": 2,
-      "title": "Janji Kumpul Tugas",
+      "title": "Bertanya Jadwal Remedial",
       "comic": {
         "narration": "Dosen membalas:",
         "speechBubble": "Semoga cepat sembuh. Tapi kamu harus menyerahkan tugas minggu ini.",
@@ -47,7 +47,7 @@
     },
     {
       "id": 3,
-      "title": "Tugas Kelompok",
+      "title": "Meminjam Alat ke Lab",
       "comic": {
         "narration": "Dosen bertanya:",
         "speechBubble": "Apakah kamu sudah mengerjakan tugas kelompok bersama teman-temanmu?",

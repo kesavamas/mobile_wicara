@@ -6,6 +6,7 @@ import 'package:wicara_application_1/services/api_service.dart';
 import 'package:wicara_application_1/widgets/mode_selection_modal.dart';
 import 'package:wicara_application_1/screens/guided_vn_screen.dart';
 import 'package:wicara_application_1/screens/independent_mode_screen.dart';
+import 'package:wicara_application_1/screens/dictionary_screen.dart';
 
 enum LevelStatus { locked, unlocked, completed }
 
@@ -136,107 +137,69 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
-        title: Text(
-          widget.bilik.title,
-          style: GoogleFonts.plusJakartaSans(
-            fontWeight: FontWeight.w800,
-            color: const Color(0xFF0F172A),
-          ),
-        ),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF9FAFB),
         elevation: 0,
-        iconTheme: const IconThemeData(color: Color(0xFF0F172A)),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF0F172A)),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.menu_book_rounded, color: Color(0xFF0F172A)),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DictionaryScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Header Banner Card
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [brandColor, brandColor.withOpacity(0.8)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: brandColor.withOpacity(0.2),
-                          blurRadius: 16,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Row(
+                  // Figma Title and Subtitle Block
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 52,
-                          height: 52,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Center(
-                            child: Text(
-                              widget.bilik.icon,
-                              style: const TextStyle(fontSize: 26),
-                            ),
+                        Text(
+                          widget.bilik.title,
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF1F2858),
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'BILIK LATIHAN',
-                                style: GoogleFonts.inter(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white70,
-                                  letterSpacing: 1.0,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                widget.bilik.title,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                widget.bilik.description,
-                                style: GoogleFonts.inter(
-                                  fontSize: 12,
-                                  color: Colors.white.withOpacity(0.85),
-                                ),
-                              ),
-                            ],
+                        const SizedBox(height: 2),
+                        Text(
+                          isSchool ? 'Komunikasi Formal di Sekolah' : 'Komunikasi Formal di Tempat Kerja',
+                          style: GoogleFonts.inter(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF8490AA),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
                   // Map World Container with custom background
                   Container(
-                    height: 580,
+                    height: 520,
                     decoration: BoxDecoration(
                       color: isSchool ? const Color(0xFFEEF3FF) : const Color(0xFFF3EFFF),
                       borderRadius: BorderRadius.circular(28),
                       border: Border.all(color: const Color(0xFFDDE2F0)),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF24304A).withOpacity(0.08),
+                          color: const Color(0xFF24304A).withOpacity(0.06),
                           blurRadius: 18,
                           offset: const Offset(0, 6),
                         ),
@@ -253,7 +216,7 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
                           if (total <= 1) {
                             return Offset(w / 2, h / 2);
                           }
-                          // y-spacing: 50 from top, 60 from bottom
+                          // y-spacing
                           double y = h - 60 - (index * (h - 110) / (total - 1));
                           double x;
                           if (index % 2 == 0) {
@@ -269,6 +232,70 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
 
                         return Stack(
                           children: [
+                            // Floating school house background icon (top right)
+                            Positioned(
+                              right: 12,
+                              top: 36,
+                              child: Icon(
+                                isSchool ? Icons.school_rounded : Icons.business_center_rounded,
+                                color: brandColor.withOpacity(0.08),
+                                size: 84,
+                              ),
+                            ),
+
+                            // Floating tree background icon (bottom left)
+                            Positioned(
+                              left: 12,
+                              bottom: 24,
+                              child: Icon(
+                                Icons.forest_rounded,
+                                color: const Color(0xFF1F9D70).withOpacity(0.08),
+                                size: 76,
+                              ),
+                            ),
+
+                            // Floating star badge (top left)
+                            Positioned(
+                              left: 16,
+                              top: 16,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.04),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(Icons.star_rounded, color: Color(0xFFFFD36A), size: 24),
+                              ),
+                            ),
+
+                            // Floating gift box badge (next to active level)
+                            Positioned(
+                              right: 16,
+                              bottom: 16,
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.06),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(Icons.card_giftcard_rounded, color: Color(0xFF4C5FD7), size: 22),
+                              ),
+                            ),
+
                             // Custom Paint winding paths
                             Positioned.fill(
                               child: CustomPaint(
@@ -364,10 +391,55 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
                 ],
               ),
             ),
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.06),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.home_rounded, color: Color(0xFF4C5FD7)),
+                onPressed: () => Navigator.pop(context),
+              ),
+              IconButton(
+                icon: const Icon(Icons.menu_book_rounded, color: Color(0xFF69738F)),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.person_rounded, color: Color(0xFF69738F)),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildMapNode(BilikLevel level, bool open, bool completed, Color brandColor) {
+    String getStatusText() {
+      if (completed) return 'Selesai';
+      if (open) return 'Siap dimainkan';
+      return 'Buka setelah Kasus ${level.id - 1}';
+    }
+
     return GestureDetector(
       onTap: () {
         if (open) {
@@ -396,9 +468,9 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
               ],
             ),
             child: Icon(
-              open ? (completed ? Icons.check_circle_rounded : Icons.play_arrow_rounded) : Icons.lock_rounded,
+              open ? (completed ? Icons.check_circle_rounded : Icons.forum_rounded) : Icons.lock_rounded,
               color: open ? Colors.white : const Color(0xFF8490AA),
-              size: 28,
+              size: 24,
             ),
           ),
           const SizedBox(width: 8),
@@ -427,7 +499,7 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
                   ),
                 ),
                 Text(
-                  completed ? 'Selesai' : (open ? 'Siap dimainkan' : 'Terkunci'),
+                  getStatusText(),
                   style: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,

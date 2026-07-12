@@ -206,8 +206,9 @@ class ModeSelectionModal extends StatelessWidget {
                         border: Border.all(color: const Color(0xFFDDE2F0)),
                       ),
                       child: const Icon(
-                        Icons.touch_app_rounded,
+                        Icons.open_in_full_rounded,
                         color: Color(0xFF4C5FD7),
+                        size: 20,
                       ),
                     ),
                   ],

@@ -25,7 +25,9 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
   late List<String> _pool;
   final List<String> _arranged = [];
   
-  int _step = 0; // 0: Intro panel, 1: Conversation, 2: Assembly puzzle, 3: Completed popup
+  int _step = 0; // 0: Cover Screen, 1: Narration Slides, 2: Dialogue, 3: Puzzle assembly, 4: Completed popup
+  int _storySlideIndex = 0;
+  int _dialogueLineIndex = 0;
   int _attemptsCount = 0;
   bool _isSaving = false;
   bool _gotCorrect = false;
@@ -40,6 +42,9 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
   void _initTokens() {
     _pool = List<String>.from(widget.level.tokens)..shuffle();
     _arranged.clear();
+    for (int i = 0; i < widget.level.tokens.length; i++) {
+      _arranged.add('');
+    }
   }
 
   @override
@@ -156,7 +161,7 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
 
       setState(() {
         _isSaving = false;
-        _step = 3; // Step 3: Success Completion View
+        _step = 4; // Step 4: Success Completion View
       });
     } else {
       if (_attemptsCount == 1) {
@@ -220,72 +225,146 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
 
         setState(() {
           _isSaving = false;
-          _step = 3;
+          _step = 4;
         });
       }
     }
+  }
+
+
+
+  List<String> _getNarrationSlides() {
+    if (widget.bilik.id == 'akademik') {
+      if (widget.level.id == 1) {
+        return [
+          'Pagi ini, Raka merasa demam.',
+          'Raka perlu memberi tahu wali kelas bahwa ia tidak dapat masuk sekolah.',
+          'Bantu Raka menyusun pesannya.'
+        ];
+      } else if (widget.level.id == 2) {
+        return [
+          'Bapak Wali Kelas membalas pesan Raka.',
+          'Raka perlu merespons untuk mengumpulkan tugas tepat waktu.',
+          'Bantu Raka menyusun pesannya.'
+        ];
+      }
+    }
+    final text = widget.level.comic.narration;
+    final parts = text.split('.').map((s) => s.trim()).where((s) => s.isNotEmpty).toList();
+    if (parts.length >= 2) {
+      return parts.map((p) => '$p.').toList();
+    }
+    return [text, 'Bantu susun pesan formal untuk menyelesaikan misi!'];
+  }
+
+  List<String> _getDialogueLines() {
+    if (widget.bilik.id == 'akademik') {
+      if (widget.level.id == 1) {
+        return [
+          "Aku harus menghubungi Bapak Wali Kelas. Sebaiknya aku mulai dari mana?",
+          "Aku perlu menyusun kalimat formal agar wali kelas memahami alasan ketidakhadiranku.",
+          "Mari kita mulai dengan menyusun kalimat pertama!"
+        ];
+      } else if (widget.level.id == 2) {
+        return [
+          "Bapak Wali Kelas mengingatkan tentang pengumpulan tugas minggu ini.",
+          "Bagaimana ya cara memberi tahu beliau dengan sopan bahwa saya akan mengumpulkan tugas besok?",
+          "Mari kita susun kalimat balasannya!"
+        ];
+      }
+    }
+    return [
+      widget.level.comic.speechBubble ?? "Mari kita bantu menyusun pesan formal ini.",
+      "Pastikan urutan SPOK tersusun dengan benar agar kalimat mudah dipahami.",
+      "Susun kalimat sekarang!"
+    ];
+  }
+
+  String _getDialogueImagePath() {
+    final currentPath = widget.level.comic.imagePath;
+    if (currentPath.contains('step-1')) return currentPath.replaceAll('step-1', 'step-2');
+    if (currentPath.contains('step-2')) return currentPath.replaceAll('step-2', 'step-3');
+    if (currentPath.contains('step-3')) return currentPath.replaceAll('step-3', 'step-4');
+    if (currentPath.contains('step-4')) return currentPath.replaceAll('step-4', 'step-5');
+    if (currentPath.contains('step-5')) return currentPath.replaceAll('step-5', 'step-6');
+    return currentPath;
   }
 
   @override
   Widget build(BuildContext context) {
     final Color brandColor = _parseColor(widget.bilik.color);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFEEF3FF),
-      appBar: AppBar(
-        title: Text(
-          'Mode Terpandu',
-          style: GoogleFonts.plusJakartaSans(
-            fontWeight: FontWeight.w800,
-            color: const Color(0xFF0F172A),
-          ),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Color(0xFF0F172A)),
-        actions: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: _buildStarsIndicator(),
+    PreferredSizeWidget? buildDynamicAppBar() {
+      if (_step == 3) {
+        return AppBar(
+          title: Text(
+            'Mode Terpandu',
+            style: GoogleFonts.plusJakartaSans(
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF0F172A),
             ),
           ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          // Background decorations
-          Positioned(
-            left: -40,
-            top: 100,
-            child: Opacity(
-              opacity: 0.1,
-              child: Container(
-                width: 140,
-                height: 140,
-                decoration: const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Color(0xFF0F172A)),
+          actions: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: _buildStarsIndicator(),
               ),
             ),
-          ),
+          ],
+        );
+      }
+      return null;
+    }
 
+    return Scaffold(
+      backgroundColor: const Color(0xFFEEF3FF),
+      appBar: buildDynamicAppBar(),
+      body: Stack(
+        children: [
+          if (_step <= 2) ...[
+            Positioned.fill(
+              child: Image.asset(
+                _step == 2 ? 'assets${_getDialogueImagePath()}' : 'assets${widget.level.comic.imagePath}',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.0),
+                      Colors.black.withOpacity(0.2),
+                      Colors.black.withOpacity(0.85),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            ),
+          ],
           SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(20.0),
-                    child: _buildBodyByStep(brandColor),
-                  ),
+                  child: _step <= 2
+                      ? _buildStoryOverlay(brandColor)
+                      : SingleChildScrollView(
+                          padding: const EdgeInsets.all(20.0),
+                          child: _buildBodyByStep(brandColor),
+                        ),
                 ),
-
-                if (_step == 2)
+                if (_step == 3)
                   _buildPuzzleFooter(brandColor),
               ],
             ),
           ),
-
-          // Confetti overlay on completion
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
@@ -300,8 +379,443 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
     );
   }
 
+  Widget _buildStoryOverlay(Color brandColor) {
+    if (_step == 0) {
+      final isSchool = widget.bilik.id == 'akademik';
+      return Column(
+        children: [
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.videogame_asset_rounded, color: Color(0xFF4C5FD7), size: 14),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Mode Terpandu',
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          color: const Color(0xFF4C5FD7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF4C5FD7),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    'Kasus ${widget.level.id}',
+                    style: GoogleFonts.inter(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.85),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Text(
+                    isSchool ? 'Bilik Sekolah' : 'Bilik Profesional',
+                    style: GoogleFonts.inter(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF5D6785),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  widget.level.title,
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF1F2858),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Bantu Raka menyampaikan pesannya dengan jelas dan sopan.',
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    color: const Color(0xFF5D6785),
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildChecklistItem(1, 'Memberi salam'),
+                const SizedBox(height: 8),
+                _buildChecklistItem(2, 'Menyampaikan izin'),
+                const SizedBox(height: 8),
+                _buildChecklistItem(3, 'Menjelaskan alasan'),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _step = 1;
+                      _storySlideIndex = 0;
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4C5FD7),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 54),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Mulai Cerita',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.arrow_forward_rounded, size: 16),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'Kembali ke Peta',
+                    style: GoogleFonts.inter(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF8490AA),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    } else if (_step == 1) {
+      final slides = _getNarrationSlides();
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: List.generate(slides.length, (idx) {
+                    final isCurrent = idx == _storySlideIndex;
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      height: 6,
+                      width: isCurrent ? 24 : 8,
+                      decoration: BoxDecoration(
+                        color: isCurrent ? Colors.white : Colors.white.withOpacity(0.35),
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    );
+                  }),
+                ),
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _step = 3;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Text(
+                        'Lewat',
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.skip_next_rounded, color: Colors.white, size: 14),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1F2858).withOpacity(0.8),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                slides[_storySlideIndex],
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                  height: 1.45,
+                ),
+              ),
+            ),
+          ),
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_storySlideIndex < slides.length - 1) {
+                        _storySlideIndex++;
+                      } else {
+                        _step = 2;
+                        _dialogueLineIndex = 0;
+                      }
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4C5FD7),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 54),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _storySlideIndex < slides.length - 1 ? 'Lanjut' : 'Mulai Percakapan',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.arrow_forward_rounded, size: 16),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    } else {
+      final dialogueLines = _getDialogueLines();
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+                  onPressed: () {
+                    setState(() {
+                      _step = 1;
+                      _storySlideIndex = _getNarrationSlides().length - 1;
+                    });
+                  },
+                ),
+                Row(
+                  children: List.generate(dialogueLines.length, (idx) {
+                    final isCurrent = idx == _dialogueLineIndex;
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: isCurrent ? const Color(0xFF4C5FD7) : Colors.white.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  }),
+                ),
+                _buildStarsIndicator(),
+              ],
+            ),
+          ),
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF4C5FD7),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Raka',
+                          style: GoogleFonts.plusJakartaSans(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF4C5FD7),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      '${_dialogueLineIndex + 1} / ${dialogueLines.length}',
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF98A2B3),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  dialogueLines[_dialogueLineIndex],
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: const Color(0xFF1F2858),
+                    height: 1.45,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_dialogueLineIndex < dialogueLines.length - 1) {
+                        _dialogueLineIndex++;
+                      } else {
+                        _step = 3;
+                      }
+                    });
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4C5FD7),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 54),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _dialogueLineIndex < dialogueLines.length - 1 ? 'Ketuk untuk lanjut' : 'Mulai Susun Kalimat',
+                        style: GoogleFonts.plusJakartaSans(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.arrow_forward_rounded, size: 16),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
+  Widget _buildChecklistItem(int num, String text) {
+    return Row(
+      children: [
+        Container(
+          width: 22,
+          height: 22,
+          decoration: const BoxDecoration(
+            color: Color(0xFFEEF3FF),
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              '$num',
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                color: const Color(0xFF4C5FD7),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          text,
+          style: GoogleFonts.inter(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF1F2858),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildStarsIndicator() {
-    int activeStars = (3 - _attemptsCount).clamp(0, 3);
+    int activeStars = _gotCorrect
+        ? (4 - _attemptsCount).clamp(1, 3)
+        : (3 - _attemptsCount).clamp(0, 3);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(3, (index) => Icon(
@@ -313,253 +827,231 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
   }
 
   Widget _buildBodyByStep(Color brandColor) {
-    if (_step == 0) {
-      // Intro / Narration Panel
+    if (_step == 3) {
+      final isReady = _arranged.every((word) => word.isNotEmpty);
+      final chain = _getSpokChain();
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: const Color(0xFFD4DCFF)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.02),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEEF3FF),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            ),
-            child: Column(
-              children: [
-                const WikaMascot(mood: WikaMood.welcome, size: 88),
-                const SizedBox(height: 20),
-                Text(
-                  'Kasus Baru Terbuka',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF24304A),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  widget.level.comic.narration,
-                  textAlign: TextAlign.center,
+                child: Text(
+                  'Percakapan ${widget.level.id} dari 6',
                   style: GoogleFonts.inter(
-                    fontSize: 14,
-                    color: const Color(0xFF5D6785),
-                    height: 1.5,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF4C5FD7),
                   ),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _step = 1;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: brandColor,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    'Mulai Cerita',
-                    style: GoogleFonts.plusJakartaSans(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    } else if (_step == 1) {
-      // Comic dialog bubble
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
-            ),
-            child: Center(
-              child: Image.asset(
-                'assets/logo.png', // Fallback logo or comic illustration
-                width: 100,
-                errorBuilder: (context, error, stackTrace) => const WikaMascot(
-                  mood: WikaMood.hint,
-                  size: 96,
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // Speech bubble
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFDCE2F0)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF1EAFE),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
                   children: [
-                    const Icon(Icons.forum_rounded, color: Color(0xFF4C5FD7), size: 16),
-                    const SizedBox(width: 6),
+                    const Icon(Icons.help_outline_rounded, color: Color(0xFF7C3AED), size: 12),
+                    const SizedBox(width: 4),
                     Text(
-                      'DIALOG TERBUKA',
+                      'Petunjuk',
                       style: GoogleFonts.inter(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w900,
-                        color: const Color(0xFF4C5FD7),
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF7C3AED),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  widget.level.comic.speechBubble ?? 'Bantu susun kalimat formal untuk menyelesaikan misi!',
-                  style: GoogleFonts.inter(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1F2858),
-                    height: 1.45,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _step = 2;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4C5FD7),
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Susun Kalimat',
-                        style: GoogleFonts.plusJakartaSans(
-                          fontWeight: FontWeight.w800,
-                          fontSize: 15,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.tune_rounded, size: 16),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      );
-    } else if (_step == 2) {
-      // Puzzle Screen
-      final isReady = _arranged.length >= widget.level.tokens.length;
+          const SizedBox(height: 16),
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Objective
           Text(
-            'Susun kalimat yang formal dan tepat:',
+            _getLevelPrompt(),
             style: GoogleFonts.plusJakartaSans(
               fontSize: 16,
               fontWeight: FontWeight.w800,
-              color: const Color(0xFF1F2858),
+              color: const Color(0xFF0F172A),
             ),
           ),
           const SizedBox(height: 12),
 
-          // Sentence Assembly Board
-          Container(
-            padding: const EdgeInsets.all(16),
-            constraints: const BoxConstraints(minHeight: 120),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: isReady ? const Color(0xFF6FD1A7) : const Color(0xFFC7D5FF),
-                width: 2.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.02),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+          if (chain.isNotEmpty) ...[
+            Row(
+              children: List.generate(chain.length, (idx) {
+                Color itemClr = const Color(0xFF4C5FD7);
+                Color bgClr = const Color(0xFFEAF2FF);
+                if (idx == 1) {
+                  itemClr = const Color(0xFFD9485F);
+                  bgClr = const Color(0xFFFFECEF);
+                } else if (idx == 2) {
+                  itemClr = const Color(0xFF1F9D70);
+                  bgClr = const Color(0xFFE8F8F1);
+                } else if (idx >= 3) {
+                  itemClr = const Color(0xFFE5A91D);
+                  bgClr = const Color(0xFFFFF4D6);
+                }
+                return Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: bgClr,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: itemClr.withOpacity(0.5)),
+                      ),
+                      child: Text(
+                        chain[idx],
+                        style: GoogleFonts.inter(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          color: itemClr,
+                        ),
+                      ),
+                    ),
+                    if (idx < chain.length - 1) ...[
+                      const SizedBox(width: 4),
+                      const Icon(Icons.arrow_forward_rounded, color: Color(0xFF98A2B3), size: 10),
+                      const SizedBox(width: 4),
+                    ],
+                  ],
+                );
+              }),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            const SizedBox(height: 20),
+          ],
+
+          DragTarget<String>(
+            onWillAccept: (data) => data != null,
+            onAcceptWithDetails: (details) {
+              final word = details.data;
+              final emptyIdx = _arranged.indexOf('');
+              if (emptyIdx != -1 && _pool.contains(word)) {
+                setState(() {
+                  _pool.remove(word);
+                  _arranged[emptyIdx] = word;
+                });
+              }
+            },
+            builder: (context, candidateData, rejectedData) {
+              return Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFFBF0),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(
+                    color: candidateData.isNotEmpty ? const Color(0xFF4C5FD7) : const Color(0xFFFFEFA7),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
                   children: [
                     Text(
-                      'Papan Susunan',
-                      style: GoogleFonts.inter(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
+                      'Susun jawaban ${widget.bilik.id == 'akademik' ? 'Raka' : 'Naya'}',
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w800,
                         color: const Color(0xFF8A6200),
                       ),
                     ),
-                    if (isReady)
-                      const Icon(Icons.check_circle_rounded, color: Color(0xFF1F9D70), size: 18),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                _arranged.isEmpty
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 20.0),
-                          child: Text(
-                            'Ketuk kartu kata di bawah',
-                            style: GoogleFonts.inter(
-                              color: const Color(0xFFC4CBDA),
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Ketuk kartu untuk menyusun',
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        color: const Color(0xFFC8A261),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Column(
+                      children: [
+                        const Icon(
+                          Icons.touch_app_rounded,
+                          color: Color(0xFFFFD56B),
+                          size: 32,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Tarik kartu ke sini',
+                          style: GoogleFonts.inter(
+                            fontSize: 11,
+                            color: const Color(0xFFC8A261),
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      )
-                    : Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: _arranged.map((word) => _buildWordCard(word, true)).toList(),
-                      ),
-              ],
-            ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 12,
+                      alignment: WrapAlignment.center,
+                      children: List.generate(widget.level.tokens.length, (index) {
+                        final word = _arranged[index];
+                        if (word.isNotEmpty) {
+                          return Draggable<String>(
+                            data: word,
+                            feedback: Material(
+                              color: Colors.transparent,
+                              child: _buildWordCard(word, true, isDragging: true),
+                            ),
+                            childWhenDragging: Opacity(
+                              opacity: 0.35,
+                              child: _buildEmptySlot(),
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _arranged[index] = '';
+                                  _pool.add(word);
+                                });
+                              },
+                              child: _buildWordCard(word, true),
+                            ),
+                          );
+                        } else {
+                          return DragTarget<String>(
+                            onWillAccept: (data) => data != null,
+                            onAcceptWithDetails: (details) {
+                              final dragWord = details.data;
+                              setState(() {
+                                if (_pool.contains(dragWord)) {
+                                  _pool.remove(dragWord);
+                                  _arranged[index] = dragWord;
+                                } else {
+                                  final oldIdx = _arranged.indexOf(dragWord);
+                                  if (oldIdx != -1) {
+                                    _arranged[oldIdx] = '';
+                                  }
+                                  _arranged[index] = dragWord;
+                                }
+                              });
+                            },
+                            builder: (context, candidateData, rejectedData) {
+                              return _buildEmptySlot(isHighlight: candidateData.isNotEmpty);
+                            },
+                          );
+                        }
+                      }),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
           const SizedBox(height: 24),
 
-          // Word chip pool
           Text(
             'KARTU KATA',
             style: GoogleFonts.inter(
@@ -570,15 +1062,39 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
             ),
           ),
           const SizedBox(height: 12),
+
           Wrap(
             spacing: 8,
-            runSpacing: 8,
-            children: _pool.map((word) => _buildWordCard(word, false)).toList(),
+            runSpacing: 12,
+            children: _pool.map((word) {
+              return Draggable<String>(
+                data: word,
+                feedback: Material(
+                  color: Colors.transparent,
+                  child: _buildWordCard(word, false, isDragging: true),
+                ),
+                childWhenDragging: Opacity(
+                  opacity: 0.35,
+                  child: _buildWordCard(word, false),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    final emptyIdx = _arranged.indexOf('');
+                    if (emptyIdx != -1) {
+                      setState(() {
+                        _pool.remove(word);
+                        _arranged[emptyIdx] = word;
+                      });
+                    }
+                  },
+                  child: _buildWordCard(word, false),
+                ),
+              );
+            }).toList(),
           ),
         ],
       );
     } else {
-      // Completed / Success Screen (Step 3)
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -617,7 +1133,6 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Correct answer reveal
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -679,7 +1194,7 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
   }
 
   Widget _buildPuzzleFooter(Color brandColor) {
-    final isReady = _arranged.length >= widget.level.tokens.length;
+    final isReady = _arranged.every((word) => word.isNotEmpty);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
@@ -707,7 +1222,7 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Periksa Jawaban',
+                  isReady ? 'Periksa Jawaban' : 'Susun semua kartunya',
                   style: GoogleFonts.plusJakartaSans(
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
@@ -723,101 +1238,156 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
     );
   }
 
-  Widget _buildWordCard(String word, bool isPlaced) {
-    final role = _getSpokRole(word);
-    
-    // Color mapping
-    Color bgColor = Colors.white;
-    Color borderClr = const Color(0xFFC4CBDF);
-    Color textClr = const Color(0xFF1F2858);
-    String label = '';
+  String _getLevelPrompt() {
+    if (widget.bilik.id == 'akademik') {
+      if (widget.level.id == 1) return 'Sampaikan bahwa Anda sakit dan tidak dapat hadir.';
+      if (widget.level.id == 2) return 'Sampaikan bahwa Anda akan mengumpulkan tugas besok.';
+      if (widget.level.id == 3) return 'Sampaikan bahwa kelompok sudah mengerjakan tugas bersama.';
+      if (widget.level.id == 4) return 'Sampaikan bahwa Anda akan mengirim email malam ini.';
+      if (widget.level.id == 5) return 'Sampaikan ucapan terima kasih banyak.';
+      if (widget.level.id == 6) return 'Sampaikan bahwa Anda bisa beristirahat dengan tenang.';
+    }
+    return widget.level.title;
+  }
 
-    if (_attemptsCount >= 2 || isPlaced) {
+  List<String> _getSpokChain() {
+    final List<String> chain = [];
+    final spok = widget.level.spokAnswer;
+    if (spok.s.isNotEmpty) chain.add('Siapa?');
+    if (spok.p.isNotEmpty) chain.add('Melakukan apa?');
+    if (spok.o.isNotEmpty) {
+      if (spok.o.toLowerCase().contains('tugas')) {
+        chain.add('Tugas apa?');
+      } else if (spok.o.toLowerCase().contains('terima kasih')) {
+        chain.add('Ucapan apa?');
+      } else {
+        chain.add('Apa?');
+      }
+    }
+    if (spok.k.isNotEmpty) {
+      if (spok.k.toLowerCase().contains('sakit')) {
+        chain.add('Mengapa?');
+      } else if (spok.k.toLowerCase().contains('besok') || spok.k.toLowerCase().contains('malam')) {
+        chain.add('Kapan?');
+      } else {
+        chain.add('Keterangan?');
+      }
+    }
+    return chain;
+  }
+
+  Widget _buildEmptySlot({bool isHighlight = false}) {
+    return Container(
+      width: 76,
+      height: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      decoration: BoxDecoration(
+        color: isHighlight ? const Color(0xFFF0F4FF) : Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isHighlight ? const Color(0xFF4C5FD7) : const Color(0xFFE2E8F0),
+          width: 2,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWordCard(String word, bool isPlaced, {bool isDragging = false}) {
+    final role = _getSpokRole(word);
+    final showHint = _attemptsCount >= 2;
+    
+    Color bgColor = Colors.white;
+    Color borderClr = const Color(0xFFE2E8F0);
+    Color textClr = const Color(0xFF1F2858);
+    Color tagClr = Colors.transparent;
+
+    if (showHint) {
       switch (role) {
         case 'S':
           bgColor = const Color(0xFFEAF2FF);
           borderClr = const Color(0xFF4D91FF);
           textClr = const Color(0xFF163E8C);
-          label = 'S';
+          tagClr = const Color(0xFF4D91FF);
           break;
         case 'P':
           bgColor = const Color(0xFFFFECEF);
           borderClr = const Color(0xFFD9485F);
           textClr = const Color(0xFF8B2235);
-          label = 'P';
+          tagClr = const Color(0xFFD9485F);
           break;
         case 'O':
           bgColor = const Color(0xFFE8F8F1);
           borderClr = const Color(0xFF1F9D70);
           textClr = const Color(0xFF145B42);
-          label = 'O';
+          tagClr = const Color(0xFF1F9D70);
           break;
         case 'K':
           bgColor = const Color(0xFFFFF4D6);
           borderClr = const Color(0xFFE5A91D);
           textClr = const Color(0xFF6A4C00);
-          label = 'K';
+          tagClr = const Color(0xFFE5A91D);
+          break;
+        case 'Pel':
+          bgColor = const Color(0xFFF1EAFE);
+          borderClr = const Color(0xFF7C3AED);
+          textClr = const Color(0xFF4C1D95);
+          tagClr = const Color(0xFF7C3AED);
           break;
       }
     }
 
-    return GestureDetector(
-      onTap: () {
-        if (_step != 2) return;
-        setState(() {
-          if (isPlaced) {
-            _arranged.remove(word);
-            _pool.add(word);
-          } else {
-            _pool.remove(word);
-            _arranged.add(word);
-          }
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: borderClr, width: 2),
-          boxShadow: [
-            BoxShadow(
-              color: borderClr.withOpacity(0.12),
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (label.isNotEmpty) ...[
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: borderClr,
-                  shape: BoxShape.circle,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: borderClr, width: 2),
+        boxShadow: isDragging
+            ? [
+                BoxShadow(
+                  color: borderClr.withOpacity(0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 8),
+                )
+              ]
+            : [
+                BoxShadow(
+                  color: borderClr.withOpacity(0.12),
+                  offset: const Offset(0, 4),
                 ),
-                child: Text(
-                  label,
-                  style: const TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 6),
-            ],
-            Text(
-              word,
-              style: GoogleFonts.inter(
-                fontSize: 13,
-                fontWeight: FontWeight.w800,
-                color: textClr,
+              ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showHint && tagClr != Colors.transparent) ...[
+            Container(
+              width: 10,
+              height: 10,
+              decoration: BoxDecoration(
+                color: tagClr,
+                shape: BoxShape.circle,
               ),
             ),
+            const SizedBox(width: 8),
           ],
-        ),
+          Text(
+            word,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+              color: textClr,
+            ),
+          ),
+          if (!isPlaced) ...[
+            const SizedBox(width: 8),
+            const Icon(
+              Icons.drag_indicator_rounded,
+              size: 14,
+              color: Color(0xFF98A2B3),
+            ),
+          ],
+        ],
       ),
     );
   }

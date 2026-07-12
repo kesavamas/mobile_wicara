@@ -22,12 +22,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
 
   final List<Map<String, dynamic>> _badges = [
-    { 'name': 'Berani Mencoba', 'icon': '🌱', 'earned': true, 'desc': 'Menyelesaikan misi pertama' },
-    { 'name': 'Penyusun Kata', 'icon': '✍️', 'earned': true, 'desc': 'Menyusun 5 kalimat' },
-    { 'name': 'Pesan Sudah Jelas', 'icon': '💬', 'earned': false, 'desc': 'Skor formalitas 80%+' },
-    { 'name': 'Komunikasi Siap', 'icon': '🚀', 'earned': false, 'desc': 'Selesaikan Bilik Profesional' },
-    { 'name': 'Penjelajah Sekolah', 'icon': '🏫', 'earned': false, 'desc': 'Semua misi Bilik Sekolah' },
-    { 'name': 'Siap Magang', 'icon': '💼', 'earned': false, 'desc': 'Semua misi Bilik Profesional' },
+    { 'name': 'Berani Mencoba', 'icon': Icons.local_florist_rounded, 'earned': true, 'desc': 'Menyelesaikan misi pertama', 'bg': Color(0xFFEAF8F1), 'border': Color(0xFF1F9D70), 'color': Color(0xFF1F9D70) },
+    { 'name': 'Penyusun Kata', 'icon': Icons.history_edu_rounded, 'earned': true, 'desc': 'Menyusun 5 kalimat', 'bg': Color(0xFFFFF9E6), 'border': Color(0xFFFFD36A), 'color': Color(0xFFE5A91D) },
+    { 'name': 'Pesan Sudah Jelas', 'icon': Icons.comment_rounded, 'earned': false, 'desc': 'Skor formalitas 80%+', 'bg': Color(0xFFF9FAFB), 'border': Color(0xFFE4E7EC), 'color': Color(0xFF98A2B3) },
+    { 'name': 'Komunikasi Siap', 'icon': Icons.rocket_launch_rounded, 'earned': false, 'desc': 'Selesaikan Bilik Profesional', 'bg': Color(0xFFF9FAFB), 'border': Color(0xFFE4E7EC), 'color': Color(0xFF98A2B3) },
+    { 'name': 'Penjelajah Sekolah', 'icon': Icons.school_rounded, 'earned': false, 'desc': 'Semua misi Bilik Sekolah', 'bg': Color(0xFFF9FAFB), 'border': Color(0xFFE4E7EC), 'color': Color(0xFF98A2B3) },
+    { 'name': 'Siap Magang', 'icon': Icons.work_rounded, 'earned': false, 'desc': 'Semua misi Bilik Profesional', 'bg': Color(0xFFF9FAFB), 'border': Color(0xFFE4E7EC), 'color': Color(0xFF98A2B3) },
   ];
 
   @override
@@ -261,22 +261,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     itemCount: _badges.length,
                     itemBuilder: (context, index) {
                       final badge = _badges[index];
-                      final earned = badge['earned'] as bool;
+                      final earned = badge['earned'] as bool;                      final badgeBg = earned ? (badge['bg'] as Color) : const Color(0xFFF7F8FC);
+                      final badgeBorder = earned ? (badge['border'] as Color) : const Color(0xFFDDE2F0);
+                      final badgeIconColor = earned ? (badge['color'] as Color) : const Color(0xFF98A2B3);
+
                       return Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                         decoration: BoxDecoration(
-                          color: earned ? const Color(0xFFFFF6DC) : const Color(0xFFF7F8FC),
+                          color: badgeBg,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
-                            color: earned ? const Color(0xFFE5A91D) : const Color(0xFFDDE2F0),
+                            color: badgeBorder,
                             width: earned ? 1.5 : 1,
                           ),
                           boxShadow: earned
                               ? [
                                   BoxShadow(
-                                    color: const Color(0xFFE5A91D).withOpacity(0.18),
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 4),
+                                    color: (badge['border'] as Color).withOpacity(0.12),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
                                   ),
                                 ]
                               : null,
@@ -284,42 +287,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              badge['icon'] as String,
-                              style: TextStyle(
-                                fontSize: 28,
-                                color: earned ? null : Colors.grey,
-                              ),
+                            Icon(
+                              badge['icon'] as IconData,
+                              size: 30,
+                              color: badgeIconColor,
                             ),
                             const SizedBox(height: 8),
                             Text(
                               badge['name'] as String,
                               textAlign: TextAlign.center,
-                              maxLines: 2,
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.inter(
-                                fontSize: 10,
+                                fontSize: 11,
                                 fontWeight: FontWeight.w800,
                                 color: earned ? const Color(0xFF24304A) : const Color(0xFF98A2B3),
-                                height: 1.2,
                               ),
                             ),
                             const SizedBox(height: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: earned ? const Color(0xFFDDF8EA) : Colors.transparent,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                earned ? '✓ Diperoleh' : 'Terkunci',
-                                style: GoogleFonts.inter(
-                                  fontSize: 8,
-                                  fontWeight: FontWeight.w800,
-                                  color: earned ? const Color(0xFF1B7A4E) : const Color(0xFFC4CBDA),
+                            if (earned)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFDDF8EA),
+                                  borderRadius: BorderRadius.circular(6),
+                                  border: Border.all(color: const Color(0xFF1B7A4E).withOpacity(0.15)),
+                                ),
+                                child: Text(
+                                  '✓ Diperoleh',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.w800,
+                                    color: const Color(0xFF1B7A4E),
+                                  ),
+                                ),
+                              )
+                            else
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Text(
+                                  badge['desc'] as String,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF98A2B3),
+                                    height: 1.25,
+                                  ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       );
@@ -359,7 +377,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Row(
                                 children: [
-                                  Text(bilik.icon, style: const TextStyle(fontSize: 16)),
+                                  Icon(
+                                    bilik.id == 'akademik' ? Icons.school_rounded : Icons.business_center_rounded,
+                                    color: brandColor,
+                                    size: 20,
+                                  ),
                                   const SizedBox(width: 8),
                                   Text(
                                     bilik.title,

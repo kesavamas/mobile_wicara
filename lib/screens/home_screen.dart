@@ -657,10 +657,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildToolkitRow() {
-    // Determine level dynamically based on completed count
+    // Determine level dynamically based on completed count to match Figma XP
     final int level = (_totalCompleted / 3).floor() + 1;
-    final int xp = _totalCompleted * 50;
-    final int nextLevelXp = level * 150;
+    final int xp = _totalCompleted * 60; // 60 XP per mission to get 120 XP for 2 completed missions
+    final int nextLevelXp = level * 300;
     final double levelPct = (xp / nextLevelXp).clamp(0.0, 1.0);
 
     return Row(
@@ -669,7 +669,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Expanded(
           flex: 5,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(22),
@@ -689,7 +689,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 36,
                   decoration: BoxDecoration(
                     color: const Color(0xFF6C4FD3),
-                    borderRadius: BorderRadius.circular(14),
+                    shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
                         color: const Color(0xFF6C4FD3).withOpacity(0.28),
@@ -755,7 +755,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF7E1),
+                color: const Color(0xFFFFFDF2),
                 borderRadius: BorderRadius.circular(22),
                 border: Border.all(color: const Color(0xFFE5C56D)),
                 boxShadow: [
@@ -770,7 +770,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(
-                    Icons.crop_free_rounded,
+                    Icons.folder_open_outlined,
                     size: 14,
                     color: Color(0xFFFFD36A),
                   ),
@@ -867,7 +867,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           // Illustration scene container
           Container(
-            height: 158,
+            height: 195,
             decoration: BoxDecoration(
               color: isSchool ? const Color(0xFFEEF3FF) : const Color(0xFFF3EFFF),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
@@ -905,11 +905,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: Row(
                               children: [
-                                Text(
-                                  bilik.icon,
-                                  style: const TextStyle(fontSize: 11),
+                                Icon(
+                                  bilik.id == 'akademik' ? Icons.school_rounded : Icons.business_center_rounded,
+                                  color: Colors.white,
+                                  size: 13,
                                 ),
-                                const SizedBox(width: 4),
+                                const SizedBox(width: 6),
                                 Text(
                                   '$totalLevels Kasus',
                                   style: GoogleFonts.inter(
@@ -968,6 +969,59 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+
+                      // Figma Progress Bar for school room
+                      if (bilik.id == 'akademik') ...[
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          width: 180,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Progres',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w800,
+                                  color: isSchool ? const Color(0xFF5D6785) : const Color(0xFF6D579E),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(999),
+                                      child: LinearProgressIndicator(
+                                        minHeight: 5,
+                                        value: progressPct,
+                                        backgroundColor: const Color(0xFFE8EBF4),
+                                        valueColor: AlwaysStoppedAnimation<Color>(brandColor),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: brandColor,
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      '${(progressPct * 100).toInt()}%',
+                                      style: GoogleFonts.inter(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

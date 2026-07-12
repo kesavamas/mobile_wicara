@@ -14,7 +14,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
   final Map<String, Map<String, String>> _entries = {
     's': {
       'emoji': '👤',
-      'label': 'S — Subjek',
+      'label': 'S Subjek',
       'example': 'SAYA',
       'q': 'Siapa yang berbicara?',
       'sentence': 'Saya membaca buku.',
@@ -24,7 +24,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
     },
     'p': {
       'emoji': '⚡',
-      'label': 'P — Predikat',
+      'label': 'P Predikat',
       'example': 'MEMBACA',
       'q': 'Apa yang dilakukan?',
       'sentence': 'Saya membaca buku.',
@@ -34,7 +34,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
     },
     'o': {
       'emoji': '📦',
-      'label': 'O — Objek',
+      'label': 'O Objek',
       'example': 'BUKU',
       'q': 'Apa yang dikenai tindakan?',
       'sentence': 'Saya membaca buku.',
@@ -44,7 +44,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
     },
     'k': {
       'emoji': '🕐',
-      'label': 'K — Keterangan',
+      'label': 'K Keterangan',
       'example': 'HARI INI',
       'q': 'Kapan, di mana, atau mengapa?',
       'sentence': 'Saya membaca buku hari ini.',
@@ -54,7 +54,7 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
     },
     'pel': {
       'emoji': '🔗',
-      'label': 'Pel — Pelengkap',
+      'label': 'Pel Pelengkap',
       'example': 'KARENA',
       'q': 'Melengkapi hubungan antarkata.',
       'sentence': 'Saya izin karena sakit.',
@@ -66,6 +66,22 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
 
   Color _parseColor(String value) {
     return Color(int.parse(value));
+  }
+
+  IconData _getDictionaryIcon(String activeTab) {
+    switch (activeTab) {
+      case 's':
+        return Icons.person_pin_rounded;
+      case 'p':
+        return Icons.bolt_rounded;
+      case 'o':
+        return Icons.inventory_2_rounded;
+      case 'k':
+        return Icons.schedule_rounded;
+      case 'pel':
+      default:
+        return Icons.link_rounded;
+    }
   }
 
   @override
@@ -188,9 +204,10 @@ class _DictionaryScreenState extends State<DictionaryScreen> {
               ),
               child: Column(
                 children: [
-                  Text(
-                    entry['emoji']!,
-                    style: const TextStyle(fontSize: 48),
+                  Icon(
+                    _getDictionaryIcon(_activeTab),
+                    size: 56,
+                    color: textClr,
                   ),
                   const SizedBox(height: 16),
                   Container(
