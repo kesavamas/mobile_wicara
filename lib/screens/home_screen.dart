@@ -11,7 +11,8 @@ import 'package:wicara_application_1/screens/focus_screen.dart';
 import 'package:wicara_application_1/widgets/wika_mascot.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final ValueChanged<int>? onNavigate;
+  const HomeScreen({Key? key, this.onNavigate}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -1063,7 +1064,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    await Navigator.push(
+                    final targetTab = await Navigator.push<int>(
                       context,
                       MaterialPageRoute(
                         builder: (context) => LevelMapScreen(
@@ -1073,6 +1074,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                     _refreshProgress();
+                    if (targetTab != null && widget.onNavigate != null) {
+                      widget.onNavigate!(targetTab);
+                    }
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),

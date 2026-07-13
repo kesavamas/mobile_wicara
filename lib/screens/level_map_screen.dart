@@ -412,18 +412,18 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
             children: [
               IconButton(
                 icon: const Icon(Icons.home_rounded, color: Color(0xFF4C5FD7)),
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop(context, 0),
               ),
               IconButton(
                 icon: const Icon(Icons.menu_book_rounded, color: Color(0xFF69738F)),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context, 1);
                 },
               ),
               IconButton(
                 icon: const Icon(Icons.person_rounded, color: Color(0xFF69738F)),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context, 2);
                 },
               ),
             ],
