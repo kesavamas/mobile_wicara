@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wicara_application_1/models/bilik.dart';
 import 'package:wicara_application_1/services/api_service.dart';
 import 'package:wicara_application_1/widgets/mode_selection_modal.dart';
@@ -27,15 +28,19 @@ class LevelMapScreen extends StatefulWidget {
 class _LevelMapScreenState extends State<LevelMapScreen> {
   List<BilikLevel> _levels = [];
   List<StudentProgress> _progress = [];
+  Map<int, int> _levelStars = {};
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadLevelsAndProgress();
+    _loadLevels();
   }
 
-  Future<void> _loadLevelsAndProgress() async {
+  Future<void> _loadLevels() async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       final String jsonContent = await DefaultAssetBundle.of(context)
           .loadString('assets/data/bilik-levels.json');
@@ -44,6 +49,14 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
       
       _levels = levelList.map((x) => BilikLevel.fromJson(x)).toList();
       _progress = await ApiService.fetchProgress();
+
+      // Load stars locally
+      final prefs = await SharedPreferences.getInstance();
+      final Map<int, int> starsMap = {};
+      for (var lvl in _levels) {
+        starsMap[lvl.id] = prefs.getInt('stars_${widget.bilik.id}_${lvl.id}') ?? 0;
+      }
+      _levelStars = starsMap;
     } catch (e) {
       debugPrint('Error loading level map: $e');
     } finally {
@@ -57,27 +70,31 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
 
   Future<void> _refreshProgress() async {
     final freshProgress = await ApiService.fetchProgress();
+    final prefs = await SharedPreferences.getInstance();
+    final Map<int, int> starsMap = {};
+    for (var lvl in _levels) {
+      starsMap[lvl.id] = prefs.getInt('stars_${widget.bilik.id}_${lvl.id}') ?? 0;
+    }
     if (mounted) {
       setState(() {
         _progress = freshProgress;
+        _levelStars = starsMap;
       });
     }
   }
 
   LevelStatus _getStatusFor(int levelId) {
+    if (levelId > 1) {
+      return LevelStatus.locked;
+    }
+
     final isCompleted = _progress.any((p) =>
         p.bilikId == widget.bilik.id &&
         p.levelId == levelId &&
         p.status == 'completed');
     if (isCompleted) return LevelStatus.completed;
 
-    if (levelId == 1) return LevelStatus.unlocked;
-
-    final isPrevCompleted = _progress.any((p) =>
-        p.bilikId == widget.bilik.id &&
-        p.levelId == levelId - 1 &&
-        p.status == 'completed');
-    return isPrevCompleted ? LevelStatus.unlocked : LevelStatus.locked;
+    return LevelStatus.unlocked;
   }
 
   Color _parseColor(String hex) {
@@ -443,7 +460,9 @@ class _LevelMapScreenState extends State<LevelMapScreen> {
     return GestureDetector(
       onTap: () {
         if (open) {
-          _showModeModal(level, completed);
+          final stars = _levelStars[level.id] ?? 0;
+          final hasThreeStars = stars == 3;
+          _showModeModal(level, hasThreeStars);
         }
       },
       child: Row(

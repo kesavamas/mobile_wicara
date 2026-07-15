@@ -383,6 +383,15 @@ class ApiService {
     required int stars,
   }) async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = 'stars_${bilikId}_$levelId';
+      final currentStars = prefs.getInt(key) ?? 0;
+      if (stars > currentStars) {
+        await prefs.setInt(key, stars);
+      }
+    } catch (_) {}
+
+    try {
       final headers = await _getHeaders();
       final response = await http.post(
         Uri.parse('${AppConstants.baseUrl}/api/log'),

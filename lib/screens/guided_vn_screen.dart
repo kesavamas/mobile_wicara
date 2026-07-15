@@ -2,9 +2,24 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wicara_application_1/models/bilik.dart';
 import 'package:wicara_application_1/services/api_service.dart';
 import 'package:wicara_application_1/widgets/wika_mascot.dart';
+
+class PuzzleStepData {
+  final String prompt;
+  final List<String> tokens;
+  final String target;
+  final Map<String, String> roles;
+
+  PuzzleStepData({
+    required this.prompt,
+    required this.tokens,
+    required this.target,
+    required this.roles,
+  });
+}
 
 class GuidedVnScreen extends StatefulWidget {
   final Bilik bilik;
@@ -32,17 +47,139 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
   bool _isSaving = false;
   bool _gotCorrect = false;
 
+  List<PuzzleStepData> _stepsData = [];
+  int _puzzleStep = 1;
+
   @override
   void initState() {
     super.initState();
     _confettiController = ConfettiController(duration: const Duration(seconds: 2));
+    _initStepsData();
     _initTokens();
   }
 
+  void _initStepsData() {
+    _stepsData = [];
+    _puzzleStep = 1;
+    
+    if (widget.bilik.id == 'akademik' && widget.level.id == 1) {
+      _stepsData = [
+        PuzzleStepData(
+          prompt: "Buka pesan dengan salam yang sopan kepada wali kelas.",
+          tokens: ["Selamat", "pagi", "Bapak", "Wali", "Kelas."],
+          target: "Selamat pagi Bapak Wali Kelas.",
+          roles: {
+            "Selamat": "Salam",
+            "pagi": "Salam",
+            "Bapak": "Salam",
+            "Wali": "Salam",
+            "Kelas.": "Salam",
+          },
+        ),
+        PuzzleStepData(
+          prompt: "Sampaikan alasanmu tidak bisa hadir ke sekolah.",
+          tokens: ["Saya", "izin tidak masuk", "sekolah", "hari ini", "karena sakit."],
+          target: "Saya izin tidak masuk sekolah hari ini karena sakit.",
+          roles: {
+            "Saya": "S",
+            "izin tidak masuk": "P",
+            "sekolah": "O",
+            "hari ini": "K",
+            "karena sakit.": "K",
+          },
+        ),
+        PuzzleStepData(
+          prompt: "Akhiri pesanmu dengan ucapan terima kasih.",
+          tokens: ["Terima", "kasih", "atas", "perhatian", "Bapak."],
+          target: "Terima kasih atas perhatian Bapak.",
+          roles: {
+            "Terima": "Penutup",
+            "kasih": "Penutup",
+            "atas": "Penutup",
+            "perhatian": "Penutup",
+            "Bapak.": "Penutup",
+          },
+        ),
+      ];
+    } else if (widget.bilik.id == 'profesional' && widget.level.id == 1) {
+      _stepsData = [
+        PuzzleStepData(
+          prompt: "Buka email dengan sapaan yang formal kepada pihak HRD.",
+          tokens: ["Yth.", "Bapak/Ibu", "HRD."],
+          target: "Yth. Bapak/Ibu HRD.",
+          roles: {
+            "Yth.": "Salam",
+            "Bapak/Ibu": "Salam",
+            "HRD.": "Salam",
+          },
+        ),
+        PuzzleStepData(
+          prompt: "Tulis kalimat inti untuk mendaftar program magang.",
+          tokens: ["Saya", "mengajukan diri", "untuk mengikuti program magang", "di perusahaan Bapak."],
+          target: "Saya mengajukan diri untuk mengikuti program magang di perusahaan Bapak.",
+          roles: {
+            "Saya": "S",
+            "mengajukan diri": "P",
+            "untuk mengikuti program magang": "O",
+            "di perusahaan Bapak.": "K",
+          },
+        ),
+        PuzzleStepData(
+          prompt: "Berikan kalimat penutup yang profesional.",
+          tokens: ["Atas", "perhatian", "Bapak,", "saya ucapkan", "terima", "kasih."],
+          target: "Atas perhatian Bapak, saya ucapkan terima kasih.",
+          roles: {
+            "Atas": "Penutup",
+            "perhatian": "Penutup",
+            "Bapak,": "Penutup",
+            "saya ucapkan": "Penutup",
+            "terima": "Penutup",
+            "kasih.": "Penutup",
+          },
+        ),
+      ];
+    } else {
+      _stepsData = [
+        PuzzleStepData(
+          prompt: widget.level.title,
+          tokens: widget.level.tokens,
+          target: widget.level.explanation.replaceFirst("Susunan formal: ", ""),
+          roles: {
+            for (var t in widget.level.tokens) t: _getSpokRoleFallback(t),
+          },
+        )
+      ];
+    }
+  }
+
+  String _getSpokRoleFallback(String token) {
+    String clean(String s) {
+      return s.replaceAll(RegExp(r'[^\w\s]'), '').toLowerCase().trim();
+    }
+    final cleanToken = clean(token);
+    if (cleanToken.isEmpty) return '';
+
+    final spok = widget.level.spokAnswer;
+    if (clean(spok.s).contains(cleanToken)) return 'S';
+    if (clean(spok.p).contains(cleanToken)) return 'P';
+    if (clean(spok.o).contains(cleanToken)) return 'O';
+    if (clean(spok.k).contains(cleanToken)) return 'K';
+    return '';
+  }
+
   void _initTokens() {
-    _pool = List<String>.from(widget.level.tokens)..shuffle();
+    if (_stepsData.isEmpty) {
+      _pool = List<String>.from(widget.level.tokens)..shuffle();
+      _arranged.clear();
+      for (int i = 0; i < widget.level.tokens.length; i++) {
+        _arranged.add('');
+      }
+      return;
+    }
+    final stepData = _stepsData[_puzzleStep - 1];
+    _pool = List<String>.from(stepData.tokens)..shuffle();
     _arranged.clear();
-    for (int i = 0; i < widget.level.tokens.length; i++) {
+    for (int i = 0; i < stepData.tokens.length; i++) {
       _arranged.add('');
     }
   }
@@ -60,28 +197,9 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
   }
 
   String _getSpokRole(String token) {
-    String clean(String s) {
-      return s.replaceAll(RegExp(r'[^\w\s]'), '').toLowerCase().trim();
-    }
-    final cleanToken = clean(token);
-    if (cleanToken.isEmpty) return '';
-
-    final spok = widget.level.spokAnswer;
-    if (clean(spok.s).contains(cleanToken)) return 'S';
-    if (clean(spok.p).contains(cleanToken)) return 'P';
-    if (clean(spok.o).contains(cleanToken)) return 'O';
-    if (clean(spok.k).contains(cleanToken)) return 'K';
-
-    // Check individual words fallback
-    final tokenWords = cleanToken.split(' ');
-    for (final word in tokenWords) {
-      if (word.isEmpty) continue;
-      if (clean(spok.s).split(' ').contains(word)) return 'S';
-      if (clean(spok.p).split(' ').contains(word)) return 'P';
-      if (clean(spok.o).split(' ').contains(word)) return 'O';
-      if (clean(spok.k).split(' ').contains(word)) return 'K';
-    }
-    return '';
+    if (_stepsData.isEmpty) return '';
+    final step = _stepsData[_puzzleStep - 1];
+    return step.roles[token] ?? step.roles[token.trim()] ?? '';
   }
 
   bool _checkIsCorrect() {
@@ -89,32 +207,38 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
       return s.replaceAll(RegExp(r'[^\w\s]'), '').toLowerCase().replaceAll(RegExp(r'\s+'), ' ').trim();
     }
     final arrangedText = clean(_arranged.join(' '));
-    final correctText = clean(widget.level.explanation.replaceFirst('Susunan formal: ', ''));
+    final correctSentence = _stepsData.isNotEmpty 
+        ? _stepsData[_puzzleStep - 1].target
+        : widget.level.explanation.replaceFirst('Susunan formal: ', '');
+    final correctText = clean(correctSentence);
     return arrangedText == correctText;
   }
 
   List<int> _calculateMismatches() {
     if (_checkIsCorrect()) return [];
-    final cleanCorrect = widget.level.explanation
-        .replaceFirst('Susunan formal: ', '')
+    final correctSentence = _stepsData.isNotEmpty 
+        ? _stepsData[_puzzleStep - 1].target
+        : widget.level.explanation.replaceFirst('Susunan formal: ', '');
+    final cleanCorrect = correctSentence
         .replaceAll(RegExp(r'[^\w\s]'), '')
         .toLowerCase()
         .split(' ');
-    final cleanArranged = _arranged
-        .map((w) => w.replaceAll(RegExp(r'[^\w\s]'), '').toLowerCase())
-        .toList();
-
-    List<int> mismatches = [];
-    if (cleanCorrect.isNotEmpty && cleanCorrect[0] != '') {
-      if (cleanArranged.isEmpty || cleanArranged[0] != cleanCorrect[0]) {
-        mismatches.add(0);
+    final List<int> mismatches = [];
+    for (int i = 0; i < _arranged.length; i++) {
+      if (_arranged[i].isEmpty) continue;
+      final cleanWord = _arranged[i].replaceAll(RegExp(r'[^\w\s]'), '').toLowerCase().trim();
+      bool found = false;
+      for (int j = 0; j < cleanCorrect.length; j++) {
+        if (cleanCorrect[j] == cleanWord) {
+          if (i != j) {
+            mismatches.add(i);
+          }
+          found = true;
+          break;
+        }
       }
-    }
-    if (cleanCorrect.length > 1 && cleanCorrect[1] != '') {
-      final pWord = cleanCorrect[1];
-      final idx = cleanArranged.indexOf(pWord);
-      if (idx == -1 || idx != 1) {
-        mismatches.add(1);
+      if (!found) {
+        mismatches.add(i);
       }
     }
     return mismatches.isEmpty ? [1] : mismatches;
@@ -131,6 +255,22 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
     });
 
     if (isCorrect) {
+      if (_stepsData.isNotEmpty && _puzzleStep < _stepsData.length) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Langkah $_puzzleStep Berhasil! Mari susun langkah berikutnya.'),
+            backgroundColor: const Color(0xFF10B981),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        setState(() {
+          _puzzleStep++;
+          _attemptsCount = 0;
+          _initTokens();
+        });
+        return;
+      }
+
       setState(() {
         _isSaving = true;
         _gotCorrect = true;
@@ -844,7 +984,7 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  'Percakapan ${widget.level.id} dari 6',
+                  _stepsData.isNotEmpty ? 'Langkah $_puzzleStep dari ${_stepsData.length}' : 'Percakapan ${widget.level.id} dari 6',
                   style: GoogleFonts.inter(
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
@@ -997,7 +1137,7 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
                       spacing: 8,
                       runSpacing: 12,
                       alignment: WrapAlignment.center,
-                      children: List.generate(widget.level.tokens.length, (index) {
+                      children: List.generate(_arranged.length, (index) {
                         final word = _arranged[index];
                         if (word.isNotEmpty) {
                           return Draggable<String>(
@@ -1154,7 +1294,7 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        widget.level.explanation,
+                        _getCompletedExplanation(),
                         style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -1239,13 +1379,8 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
   }
 
   String _getLevelPrompt() {
-    if (widget.bilik.id == 'akademik') {
-      if (widget.level.id == 1) return 'Sampaikan bahwa Anda sakit dan tidak dapat hadir.';
-      if (widget.level.id == 2) return 'Sampaikan bahwa Anda akan mengumpulkan tugas besok.';
-      if (widget.level.id == 3) return 'Sampaikan bahwa kelompok sudah mengerjakan tugas bersama.';
-      if (widget.level.id == 4) return 'Sampaikan bahwa Anda akan mengirim email malam ini.';
-      if (widget.level.id == 5) return 'Sampaikan ucapan terima kasih banyak.';
-      if (widget.level.id == 6) return 'Sampaikan bahwa Anda bisa beristirahat dengan tenang.';
+    if (_stepsData.isNotEmpty) {
+      return _stepsData[_puzzleStep - 1].prompt;
     }
     return widget.level.title;
   }
@@ -1333,6 +1468,13 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
           textClr = const Color(0xFF4C1D95);
           tagClr = const Color(0xFF7C3AED);
           break;
+        case 'Salam':
+        case 'Penutup':
+          bgColor = const Color(0xFFF1F5F9);
+          borderClr = const Color(0xFFCBD5E1);
+          textClr = const Color(0xFF475569);
+          tagClr = const Color(0xFF94A3B8);
+          break;
       }
     }
 
@@ -1390,5 +1532,15 @@ class _GuidedVnScreenState extends State<GuidedVnScreen> {
         ],
       ),
     );
+  }
+
+  String _getCompletedExplanation() {
+    if (widget.bilik.id == 'akademik' && widget.level.id == 1) {
+      return "Selamat pagi Bapak Wali Kelas.\nSaya izin tidak masuk sekolah hari ini karena sakit.\nTerima kasih atas perhatian Bapak.";
+    }
+    if (widget.bilik.id == 'profesional' && widget.level.id == 1) {
+      return "Yth. Bapak/Ibu HRD.\nSaya mengajukan diri untuk mengikuti program magang di perusahaan Bapak.\nAtas perhatian Bapak, saya ucapkan terima kasih.";
+    }
+    return widget.level.explanation;
   }
 }
