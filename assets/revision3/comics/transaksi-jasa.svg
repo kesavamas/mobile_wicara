@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title>Ilustrasi latihan transaksi dan jasa</title>
+  <rect width="800" height="600" rx="40" fill="#FFFBEB"/>
+  <circle cx="120" cy="112" r="92" fill="#FED7AA" opacity=".8"/>
+  <path d="M132 202h470v290a44 44 0 0 1-44 44H176a44 44 0 0 1-44-44V202Z" fill="#FFFFFF"/>
+  <path d="M82 194h570L594 83H140L82 194Z" fill="#F59E0B"/>
+  <path d="M130 194c0 54 86 54 86 0M216 194c0 54 86 54 86 0M302 194c0 54 86 54 86 0M388 194c0 54 86 54 86 0M474 194c0 54 86 54 86 0" fill="none" stroke="#B45309" stroke-width="18" stroke-linecap="round"/>
+  <rect x="220" y="292" width="270" height="130" rx="28" fill="#FDE68A"/>
+  <circle cx="288" cy="357" r="34" fill="#10B981"/>
+  <path d="M350 334h86M350 380h62" stroke="#D97706" stroke-width="20" stroke-linecap="round"/>
+  <circle cx="620" cy="340" r="62" fill="#FDBA74"/>
+  <path d="M562 318c33-61 120-50 132 8-41-17-83-7-132-8Z" fill="#7C2D12"/>
+  <path d="M520 524c28-71 169-71 197 0H520Z" fill="#0EA5E9"/>
+</svg>

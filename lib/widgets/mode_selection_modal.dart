@@ -35,7 +35,12 @@ class ModeSelectionModal extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
-      padding: EdgeInsets.fromLTRB(16, 12, 16, MediaQuery.of(context).padding.bottom + 16),
+      padding: EdgeInsets.fromLTRB(
+        16,
+        12,
+        16,
+        MediaQuery.of(context).padding.bottom + 16,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -68,7 +73,10 @@ class ModeSelectionModal extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
@@ -134,13 +142,16 @@ class ModeSelectionModal extends StatelessWidget {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFF4C5FD7),
                                   borderRadius: BorderRadius.circular(999),
                                 ),
                                 child: Text(
-                                  '⭐ Direkomendasikan',
+                                  'Direkomendasikan',
                                   style: GoogleFonts.inter(
                                     fontSize: 9,
                                     fontWeight: FontWeight.w800,
@@ -150,11 +161,16 @@ class ModeSelectionModal extends StatelessWidget {
                               ),
                               const SizedBox(width: 6),
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(999),
-                                  border: Border.all(color: const Color(0xFFE5A91D)),
+                                  border: Border.all(
+                                    color: const Color(0xFFE5A91D),
+                                  ),
                                 ),
                                 child: Text(
                                   '+50 XP',
@@ -249,10 +265,14 @@ class ModeSelectionModal extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isCompleted ? const Color(0xFFF1EDFF) : const Color(0xFFF7F8FC),
+              color: isCompleted
+                  ? const Color(0xFFF1EDFF)
+                  : const Color(0xFFF7F8FC),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: isCompleted ? const Color(0xFFD8CCFA) : const Color(0xFFDDE2F0),
+                color: isCompleted
+                    ? const Color(0xFFD8CCFA)
+                    : const Color(0xFFDDE2F0),
                 width: 2,
               ),
             ),
@@ -266,15 +286,23 @@ class ModeSelectionModal extends StatelessWidget {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        color: isCompleted ? Colors.white : const Color(0xFFEEF0F5),
+                        color: isCompleted
+                            ? Colors.white
+                            : const Color(0xFFEEF0F5),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: isCompleted ? const Color(0xFFD8CCFA) : const Color(0xFFDDE2F0),
+                          color: isCompleted
+                              ? const Color(0xFFD8CCFA)
+                              : const Color(0xFFDDE2F0),
                         ),
                       ),
                       child: Icon(
-                        isCompleted ? Icons.lock_open_rounded : Icons.lock_rounded,
-                        color: isCompleted ? const Color(0xFF6C4FD3) : const Color(0xFF69738F),
+                        isCompleted
+                            ? Icons.lock_open_rounded
+                            : Icons.lock_rounded,
+                        color: isCompleted
+                            ? const Color(0xFF6C4FD3)
+                            : const Color(0xFF69738F),
                         size: 20,
                       ),
                     ),
@@ -307,11 +335,16 @@ class ModeSelectionModal extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(3, (index) => Icon(
-                    Icons.star_rounded,
-                    size: 20,
-                    color: isCompleted ? const Color(0xFFFFD36A) : const Color(0xFFDDE2F0),
-                  )),
+                  children: List.generate(
+                    3,
+                    (index) => Icon(
+                      Icons.star_rounded,
+                      size: 20,
+                      color: isCompleted
+                          ? const Color(0xFFFFD36A)
+                          : const Color(0xFFDDE2F0),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(

@@ -12,7 +12,6 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _pageController = PageController();
   int _currentStep = 0;
 
   final List<Map<String, dynamic>> _slides = [

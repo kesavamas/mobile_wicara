@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wicara_application_1/services/api_service.dart';
-import 'package:wicara_application_1/screens/home_screen.dart';
+import 'package:wicara_application_1/services/session_service.dart';
 import 'package:wicara_application_1/screens/main_layout.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   bool _isRegistering = false;
   bool _isLoading = false;
+  bool _isDemoLoading = false;
   String? _errorMessage;
 
   // Selected Avatar details
@@ -100,6 +101,21 @@ class _LoginScreenState extends State<LoginScreen> {
             'Token tidak ditemukan. Coba hubungi gurumu atau daftar baru.';
       });
     }
+  }
+
+  Future<void> _handleDemoLogin() async {
+    setState(() {
+      _isDemoLoading = true;
+      _errorMessage = null;
+    });
+
+    await SessionService.saveDemoSession();
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MainLayout()),
+    );
   }
 
   Future<void> _handleRegister() async {
@@ -586,7 +602,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
-                            onPressed: _isLoading
+                            onPressed: _isLoading || _isDemoLoading
                                 ? null
                                 : (_isRegistering ? _handleRegister : _handleLogin),
                             icon: _isLoading
@@ -619,17 +635,96 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
+
+                        if (!_isRegistering) ...[
+                          const SizedBox(height: 18),
+                          Row(
+                            children: [
+                              const Expanded(
+                                child: Divider(color: Color(0xFFE2E8F0)),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(
+                                  'atau',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(0xFF94A3B8),
+                                  ),
+                                ),
+                              ),
+                              const Expanded(
+                                child: Divider(color: Color(0xFFE2E8F0)),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: _isLoading || _isDemoLoading
+                                  ? null
+                                  : _handleDemoLogin,
+                              icon: _isDemoLoading
+                                  ? const SizedBox.square(
+                                      dimension: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Color(0xFF4C5FD7),
+                                      ),
+                                    )
+                                  : const Icon(Icons.play_circle_outline_rounded),
+                              label: Text(
+                                _isDemoLoading
+                                    ? 'Menyiapkan akun demo...'
+                                    : 'Coba akun demo',
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: const Color(0xFF4C5FD7),
+                                backgroundColor: const Color(0xFFF5F7FF),
+                                side: const BorderSide(
+                                  color: Color(0xFFC7D2FE),
+                                  width: 1.5,
+                                ),
+                                padding: const EdgeInsets.symmetric(vertical: 15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                textStyle: GoogleFonts.plusJakartaSans(
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Center(
+                            child: Text(
+                              'Masuk tanpa token. Progres demo tersimpan terpisah.',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.inter(
+                                fontSize: 10,
+                                height: 1.35,
+                                color: const Color(0xFF64748B),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                         
                         // Toggle link
                         const SizedBox(height: 16),
                         Center(
                           child: TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _isRegistering = !_isRegistering;
-                                _errorMessage = null;
-                              });
-                            },
+                            onPressed: _isLoading || _isDemoLoading
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _isRegistering = !_isRegistering;
+                                      _errorMessage = null;
+                                    });
+                                  },
                             child: Text(
                               _isRegistering
                                   ? 'Sudah punya akun? Masuk dengan token'

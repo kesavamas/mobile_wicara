@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title>Ilustrasi latihan mobilitas</title>
+  <rect width="800" height="600" rx="40" fill="#ECFEFF"/>
+  <path d="M0 394h800v206H0z" fill="#CFFAFE"/>
+  <path d="M96 384h606c34 0 62 28 62 62v65H34v-65c0-34 28-62 62-62Z" fill="#075985"/>
+  <path d="M91 210h531c58 0 105 47 105 105v138H58V243c0-18 15-33 33-33Z" fill="#0EA5E9"/>
+  <path d="M113 258h410c20 0 36 16 36 36v58H113v-94Z" fill="#E0F2FE"/>
+  <circle cx="184" cy="467" r="48" fill="#0F172A"/>
+  <circle cx="598" cy="467" r="48" fill="#0F172A"/>
+  <circle cx="184" cy="467" r="18" fill="#CBD5E1"/>
+  <circle cx="598" cy="467" r="18" fill="#CBD5E1"/>
+  <path d="M647 96c-54 0-98 44-98 98 0 78 98 188 98 188s98-110 98-188c0-54-44-98-98-98Z" fill="#F472B6"/>
+  <circle cx="647" cy="194" r="34" fill="#fff"/>
+  <path d="M78 126h210M183 78v96" stroke="#14B8A6" stroke-width="22" stroke-linecap="round"/>
+</svg>

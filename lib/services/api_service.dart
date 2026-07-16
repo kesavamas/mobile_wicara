@@ -7,7 +7,14 @@ import 'package:wicara_application_1/models/bilik.dart';
 
 class ApiService {
   static String? lastError;
+  static bool lastProgressUsedCache = false;
   static bool _isSyncing = false;
+
+  static Future<String> _progressCacheKey() async {
+    return await SessionService.isDemoMode()
+        ? 'demo_cached_progress'
+        : 'cached_progress';
+  }
 
   static Future<Map<String, String>> _getHeaders() async {
     final token = await SessionService.getToken();
@@ -40,7 +47,7 @@ class ApiService {
   static Future<List<StudentProgress>> getCachedProgress() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final jsonStr = prefs.getString('cached_progress');
+      final jsonStr = prefs.getString(await _progressCacheKey());
       if (jsonStr != null && jsonStr.isNotEmpty) {
         final List decoded = jsonDecode(jsonStr);
         return decoded.map((x) => StudentProgress.fromJson(x)).toList();
@@ -53,24 +60,26 @@ class ApiService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final jsonStr = jsonEncode(progress.map((x) => x.toJson()).toList());
-      await prefs.setString('cached_progress', jsonStr);
+      await prefs.setString(await _progressCacheKey(), jsonStr);
     } catch (_) {}
   }
 
-  static Future<void> _queuePendingProgress(String bilikId, int levelId, String status) async {
+  static Future<void> _queuePendingProgress(
+    String bilikId,
+    int levelId,
+    String status,
+  ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final queueStr = prefs.getString('pending_progress') ?? '[]';
       final List queue = jsonDecode(queueStr);
-      
+
       // Remove any existing entry for the same level to avoid duplicates
-      queue.removeWhere((x) => x['bilikId'] == bilikId && x['levelId'] == levelId);
-      
-      queue.add({
-        'bilikId': bilikId,
-        'levelId': levelId,
-        'status': status,
-      });
+      queue.removeWhere(
+        (x) => x['bilikId'] == bilikId && x['levelId'] == levelId,
+      );
+
+      queue.add({'bilikId': bilikId, 'levelId': levelId, 'status': status});
       await prefs.setString('pending_progress', jsonEncode(queue));
     } catch (_) {}
   }
@@ -83,6 +92,7 @@ class ApiService {
     required double score,
     double? wer,
     required int stars,
+    Map<String, dynamic> metadata = const {},
   }) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -97,6 +107,7 @@ class ApiService {
         'score': score,
         'wer': wer,
         'stars': stars,
+        ...metadata,
       });
       await prefs.setString('pending_logs', jsonEncode(queue));
     } catch (_) {}
@@ -104,13 +115,14 @@ class ApiService {
 
   static Future<void> syncOfflineData() async {
     if (_isSyncing) return;
+    if (await SessionService.isDemoMode()) return;
     final token = await SessionService.getToken();
     if (token == null) return; // Not logged in, skip
 
     _isSyncing = true;
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // 1. Sync pending progress
       final progressQueueStr = prefs.getString('pending_progress') ?? '[]';
       final List progressQueue = jsonDecode(progressQueueStr);
@@ -119,11 +131,13 @@ class ApiService {
         final headers = await _getHeaders();
         for (var item in progressQueue) {
           try {
-            final response = await http.post(
-              Uri.parse('${AppConstants.baseUrl}/api/progress'),
-              headers: headers,
-              body: jsonEncode(item),
-            ).timeout(const Duration(seconds: 4));
+            final response = await http
+                .post(
+                  Uri.parse('${AppConstants.baseUrl}/api/progress'),
+                  headers: headers,
+                  body: jsonEncode(item),
+                )
+                .timeout(const Duration(seconds: 4));
 
             if (response.statusCode != 200) {
               remaining.add(item);
@@ -143,19 +157,13 @@ class ApiService {
         final headers = await _getHeaders();
         for (var item in logsQueue) {
           try {
-            final response = await http.post(
-              Uri.parse('${AppConstants.baseUrl}/api/log'),
-              headers: headers,
-              body: jsonEncode({
-                'is_correct': item['is_correct'],
-                'mismatched_positions': List<int>.from(item['mismatched_positions']),
-                'bilik_id': item['bilik_id'] ?? '',
-                'level_id': item['level_id'] ?? 0,
-                'score': item['score'] ?? (item['is_correct'] == true ? 100.0 : 0.0),
-                'wer': item['wer'],
-                'stars': item['stars'] ?? (item['is_correct'] == true ? 3 : 0),
-              }),
-            ).timeout(const Duration(seconds: 4));
+            final response = await http
+                .post(
+                  Uri.parse('${AppConstants.baseUrl}/api/log'),
+                  headers: headers,
+                  body: jsonEncode(Map<String, dynamic>.from(item)),
+                )
+                .timeout(const Duration(seconds: 4));
 
             if (response.statusCode != 200) {
               remaining.add(item);
@@ -178,11 +186,13 @@ class ApiService {
   static Future<bool> login(String token, String password) async {
     lastError = null;
     try {
-      final response = await http.post(
-        Uri.parse('${AppConstants.baseUrl}/api/auth/student-login'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'token': token, 'password': password}),
-      ).timeout(const Duration(seconds: 5));
+      final response = await http
+          .post(
+            Uri.parse('${AppConstants.baseUrl}/api/auth/student-login'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({'token': token, 'password': password}),
+          )
+          .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final data = _decodeBody(response) as Map<String, dynamic>;
@@ -205,10 +215,10 @@ class ApiService {
               token.trim().toUpperCase().replaceFirst('WCR-', 'S'),
           avatarColor: avatar['color']?.toString() ?? '#3B82F6',
         );
-        
+
         // Trigger sync of any cached progress/logs immediately after login succeeds
         syncOfflineData();
-        
+
         return true;
       }
 
@@ -220,18 +230,25 @@ class ApiService {
     }
   }
 
-  static Future<String?> register(String nickname, String password, String emoji, String color) async {
+  static Future<String?> register(
+    String nickname,
+    String password,
+    String emoji,
+    String color,
+  ) async {
     lastError = null;
     try {
-      final response = await http.post(
-        Uri.parse('${AppConstants.baseUrl}/api/auth/student-register'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'nickname': nickname,
-          'password': password,
-          'avatar': {'emoji': emoji, 'color': color}
-        }),
-      ).timeout(const Duration(seconds: 5));
+      final response = await http
+          .post(
+            Uri.parse('${AppConstants.baseUrl}/api/auth/student-register'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'nickname': nickname,
+              'password': password,
+              'avatar': {'emoji': emoji, 'color': color},
+            }),
+          )
+          .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final data = _decodeBody(response) as Map<String, dynamic>;
@@ -249,7 +266,10 @@ class ApiService {
         await SessionService.saveSession(
           token: accessToken,
           studentId: token,
-          avatarEmoji: avatar['emoji']?.toString() ?? avatar['label']?.toString() ?? emoji,
+          avatarEmoji:
+              avatar['emoji']?.toString() ??
+              avatar['label']?.toString() ??
+              emoji,
           avatarColor: avatar['color']?.toString() ?? color,
         );
         return token;
@@ -264,15 +284,24 @@ class ApiService {
   }
 
   static Future<List<StudentProgress>> fetchProgress() async {
+    if (await SessionService.isDemoMode()) {
+      lastProgressUsedCache = false;
+      return getCachedProgress();
+    }
+
+    lastProgressUsedCache = false;
+
     // Try to sync offline data in background first
     syncOfflineData();
 
     try {
       final headers = await _getHeaders();
-      final response = await http.get(
-        Uri.parse('${AppConstants.baseUrl}/api/progress'),
-        headers: headers,
-      ).timeout(const Duration(seconds: 4));
+      final response = await http
+          .get(
+            Uri.parse('${AppConstants.baseUrl}/api/progress'),
+            headers: headers,
+          )
+          .timeout(const Duration(seconds: 4));
 
       if (response.statusCode == 200) {
         final data = _decodeBody(response) as Map<String, dynamic>;
@@ -281,13 +310,14 @@ class ApiService {
             .whereType<Map<String, dynamic>>()
             .map(StudentProgress.fromJson)
             .toList();
-        
+
         await saveCachedProgress(list);
         return list;
       }
     } catch (_) {
       // Failed to reach backend, load from cache
     }
+    lastProgressUsedCache = true;
     return await getCachedProgress();
   }
 
@@ -299,7 +329,7 @@ class ApiService {
     // 1. Instantly update local progress cache
     final currentCache = await getCachedProgress();
     final index = currentCache.indexWhere(
-      (p) => p.bilikId == bilikId && p.levelId == levelId
+      (p) => p.bilikId == bilikId && p.levelId == levelId,
     );
     final newProgress = StudentProgress(
       bilikId: bilikId,
@@ -312,19 +342,32 @@ class ApiService {
       currentCache.add(newProgress);
     }
     await saveCachedProgress(currentCache);
+    if (status == 'completed') {
+      final prefs = await SharedPreferences.getInstance();
+      final timestampKey = 'completed_at_${bilikId}_$levelId';
+      if (!prefs.containsKey(timestampKey)) {
+        await prefs.setInt(timestampKey, DateTime.now().millisecondsSinceEpoch);
+      }
+    }
+
+    if (await SessionService.isDemoMode()) {
+      return true;
+    }
 
     // 2. Try to update backend
     try {
       final headers = await _getHeaders();
-      final response = await http.post(
-        Uri.parse('${AppConstants.baseUrl}/api/progress'),
-        headers: headers,
-        body: jsonEncode({
-          'bilikId': bilikId,
-          'levelId': levelId,
-          'status': status,
-        }),
-      ).timeout(const Duration(seconds: 4));
+      final response = await http
+          .post(
+            Uri.parse('${AppConstants.baseUrl}/api/progress'),
+            headers: headers,
+            body: jsonEncode({
+              'bilikId': bilikId,
+              'levelId': levelId,
+              'status': status,
+            }),
+          )
+          .timeout(const Duration(seconds: 4));
 
       if (response.statusCode == 200) {
         return true;
@@ -337,19 +380,26 @@ class ApiService {
     return true; // Return true to allow UI to advance smoothly offline
   }
 
-  static Future<bool> updateProfile(String nickname, String password, String emoji, String color) async {
+  static Future<bool> updateProfile(
+    String nickname,
+    String password,
+    String emoji,
+    String color,
+  ) async {
     lastError = null;
     try {
       final headers = await _getHeaders();
-      final response = await http.put(
-        Uri.parse('${AppConstants.baseUrl}/api/profile'),
-        headers: headers,
-        body: jsonEncode({
-          'nickname': nickname,
-          'password': password,
-          'avatar': {'emoji': emoji, 'color': color}
-        }),
-      ).timeout(const Duration(seconds: 5));
+      final response = await http
+          .put(
+            Uri.parse('${AppConstants.baseUrl}/api/profile'),
+            headers: headers,
+            body: jsonEncode({
+              'nickname': nickname,
+              'password': password,
+              'avatar': {'emoji': emoji, 'color': color},
+            }),
+          )
+          .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         final token = await SessionService.getToken();
@@ -381,31 +431,73 @@ class ApiService {
     required double score,
     double? wer,
     required int stars,
+    Map<String, dynamic> metadata = const {},
+    List<String> rawArrangement = const [],
+    List<String> errorTypes = const [],
+    int? attemptNumber,
+    int? durationMs,
+    String? assistanceLevel,
+    String eventType = 'guided_card_attempt',
+    bool persistStars = true,
   }) async {
+    final isDemo = await SessionService.isDemoMode();
+    final studentId = await SessionService.getStudentId();
+    final metadata = <String, dynamic>{
+      'event_type': eventType,
+      'student_id': studentId,
+      'raw_arrangement': rawArrangement,
+      'error_types': errorTypes,
+      'attempt_number': attemptNumber,
+      'duration_ms': durationMs,
+      'assistance_level': assistanceLevel,
+      'logged_at': DateTime.now().toIso8601String(),
+    }..removeWhere((key, value) => value == null);
     try {
       final prefs = await SharedPreferences.getInstance();
-      final key = 'stars_${bilikId}_$levelId';
+      final key = '${isDemo ? 'demo_' : ''}stars_${bilikId}_$levelId';
       final currentStars = prefs.getInt(key) ?? 0;
-      if (stars > currentStars) {
+      if (persistStars && stars > currentStars) {
         await prefs.setInt(key, stars);
       }
+      final localKey = isDemo ? 'demo_learning_logs' : 'learning_logs';
+      final localLogs = jsonDecode(prefs.getString(localKey) ?? '[]') as List;
+      localLogs.add({
+        'is_correct': isCorrect,
+        'mismatched_positions': mismatchedPositions,
+        'bilik_id': bilikId,
+        'level_id': levelId,
+        'score': score,
+        'wer': wer,
+        'stars': stars,
+        ...metadata,
+        ...metadata,
+      });
+      if (localLogs.length > 200) {
+        localLogs.removeRange(0, localLogs.length - 200);
+      }
+      await prefs.setString(localKey, jsonEncode(localLogs));
     } catch (_) {}
+
+    if (isDemo) return true;
 
     try {
       final headers = await _getHeaders();
-      final response = await http.post(
-        Uri.parse('${AppConstants.baseUrl}/api/log'),
-        headers: headers,
-        body: jsonEncode({
-          'is_correct': isCorrect,
-          'mismatched_positions': mismatchedPositions,
-          'bilik_id': bilikId,
-          'level_id': levelId,
-          'score': score,
-          'wer': wer,
-          'stars': stars,
-        }),
-      ).timeout(const Duration(seconds: 4));
+      final response = await http
+          .post(
+            Uri.parse('${AppConstants.baseUrl}/api/log'),
+            headers: headers,
+            body: jsonEncode({
+              'is_correct': isCorrect,
+              'mismatched_positions': mismatchedPositions,
+              'bilik_id': bilikId,
+              'level_id': levelId,
+              'score': score,
+              'wer': wer,
+              'stars': stars,
+              ...metadata,
+            }),
+          )
+          .timeout(const Duration(seconds: 4));
       return response.statusCode == 200;
     } catch (e) {
       // Failed to reach backend, queue for background sync
@@ -417,8 +509,20 @@ class ApiService {
         score: score,
         wer: wer,
         stars: stars,
+        metadata: metadata,
       );
       return false;
+    }
+  }
+
+  static Future<int> getBestStars(String bilikId, int levelId) async {
+    try {
+      final isDemo = await SessionService.isDemoMode();
+      final prefs = await SharedPreferences.getInstance();
+      final key = '${isDemo ? 'demo_' : ''}stars_${bilikId}_$levelId';
+      return prefs.getInt(key) ?? 0;
+    } catch (_) {
+      return 0;
     }
   }
 

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title>Ilustrasi latihan profesional</title>
+  <rect width="800" height="600" rx="40" fill="#F5F3FF"/>
+  <circle cx="674" cy="112" r="120" fill="#FBCFE8" opacity=".65"/>
+  <path d="M88 401h628v92H88z" fill="#DDD6FE"/>
+  <path d="M142 210h260a42 42 0 0 1 42 42v149H100V252a42 42 0 0 1 42-42Z" fill="#FFFFFF"/>
+  <path d="M156 267h232M156 315h168M156 363h205" stroke="#A78BFA" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="588" cy="225" r="64" fill="#FDBA74"/>
+  <path d="M528 205c28-62 122-53 140 6-42-12-88-8-140-6Z" fill="#3F1D83"/>
+  <path d="M495 401c31-72 157-72 188 0H495Z" fill="#7C3AED"/>
+  <path d="M498 405h178v102H498z" fill="#8B5CF6"/>
+  <path d="M562 394h54l22 114H540l22-114Z" fill="#FDE68A"/>
+  <path d="M548 116h142a34 34 0 0 1 34 34v88H548V116Z" fill="#FFFFFF"/>
+  <path d="M578 154h80M578 190h52" stroke="#7C3AED" stroke-width="18" stroke-linecap="round"/>
+</svg>
