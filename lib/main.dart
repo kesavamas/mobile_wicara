@@ -36,14 +36,14 @@ class MyApp extends StatelessWidget {
       title: 'WICARA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF7F7F2),
+        scaffoldBackgroundColor: Colors.white,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF2563EB),
           primary: const Color(0xFF2563EB),
           secondary: const Color(0xFFF59E0B),
           surface: Colors.white,
         ),
-        textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme),
+        textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
         appBarTheme: const AppBarTheme(
           centerTitle: false,
           scrolledUnderElevation: 0,

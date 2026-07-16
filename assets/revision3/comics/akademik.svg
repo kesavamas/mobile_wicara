@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title>Ilustrasi latihan akademik</title>
+  <rect width="800" height="600" rx="40" fill="#EFF6FF"/>
+  <circle cx="670" cy="94" r="96" fill="#F5D0FE" opacity=".7"/>
+  <circle cx="116" cy="468" r="132" fill="#DBEAFE"/>
+  <path d="M112 435h576v96H112z" fill="#C7D2FE"/>
+  <path d="M170 182h248a24 24 0 0 1 24 24v188H146V206a24 24 0 0 1 24-24Z" fill="#FFFFFF"/>
+  <path d="M178 226h230M178 271h177M178 316h211" stroke="#60A5FA" stroke-width="18" stroke-linecap="round"/>
+  <path d="M520 223h124c25 0 45 20 45 45v126H475V268c0-25 20-45 45-45Z" fill="#FDE68A"/>
+  <circle cx="568" cy="194" r="56" fill="#FDBA74"/>
+  <path d="M519 177c32-43 111-24 115 32-25-19-65-13-115-32Z" fill="#7C2D12"/>
+  <path d="M529 394c27-45 132-45 159 0v40H529v-40Z" fill="#2563EB"/>
+  <path d="M498 120 608 72l110 48-110 47-110-47Z" fill="#1E3A8A"/>
+  <path d="M548 149v42c0 30 120 30 120 0v-42" fill="#3B82F6"/>
+  <path d="M690 126v72" stroke="#1E3A8A" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="690" cy="210" r="14" fill="#F59E0B"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title">
+  <title>Ilustrasi latihan kesehatan</title>
+  <rect width="800" height="600" rx="40" fill="#F0FDF4"/>
+  <circle cx="642" cy="118" r="118" fill="#CFFAFE"/>
+  <path d="M108 238h424a40 40 0 0 1 40 40v240H108V238Z" fill="#FFFFFF"/>
+  <path d="M190 174h300a38 38 0 0 1 38 38v52H152v-52a38 38 0 0 1 38-38Z" fill="#34D399"/>
+  <path d="M302 296h74v70h70v76h-70v70h-74v-70h-70v-76h70v-70Z" fill="#10B981"/>
+  <circle cx="620" cy="321" r="70" fill="#FDBA74"/>
+  <path d="M560 304c28-59 114-50 130 6-36-11-76-7-130-6Z" fill="#7C2D12"/>
+  <path d="M521 516c30-68 172-68 202 0H521Z" fill="#60A5FA"/>
+  <path d="M636 112c-29-42-98-18-98 37 0 66 98 119 98 119s98-53 98-119c0-55-69-79-98-37Z" fill="#FB7185"/>
+  <path d="M106 520h618" stroke="#BBF7D0" stroke-width="28" stroke-linecap="round"/>
+</svg>

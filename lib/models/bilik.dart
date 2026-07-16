@@ -85,16 +85,24 @@ class SpokAnswer {
 class BilikLevel {
   final int id;
   final String title;
+  final String shortTitle;
+  final String prompt;
+  final String target;
   final Comic comic;
   final List<String> tokens;
+  final Map<String, String> tokenRoles;
   final SpokAnswer spokAnswer;
   final String explanation;
 
   BilikLevel({
     required this.id,
     required this.title,
+    required this.shortTitle,
+    required this.prompt,
+    required this.target,
     required this.comic,
     required this.tokens,
+    required this.tokenRoles,
     required this.spokAnswer,
     required this.explanation,
   });
@@ -103,8 +111,12 @@ class BilikLevel {
     return BilikLevel(
       id: json['id'],
       title: json['title'] ?? '',
+      shortTitle: json['shortTitle'] ?? json['title'] ?? '',
+      prompt: json['prompt'] ?? json['comic']?['narration'] ?? '',
+      target: json['target'] ?? '',
       comic: Comic.fromJson(json['comic'] ?? {}),
       tokens: List<String>.from(json['tokens'] ?? []),
+      tokenRoles: Map<String, String>.from(json['tokenRoles'] ?? const {}),
       spokAnswer: SpokAnswer.fromJson(json['spok_answer'] ?? {}),
       explanation: json['explanation'] ?? '',
     );
@@ -134,10 +146,6 @@ class StudentProgress {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'bilik_id': bilikId,
-      'level_id': levelId,
-      'status': status,
-    };
+    return {'bilik_id': bilikId, 'level_id': levelId, 'status': status};
   }
 }

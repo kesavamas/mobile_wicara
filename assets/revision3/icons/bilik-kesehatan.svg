@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title>Ikon bilik kesehatan</title>
+  <defs>
+    <linearGradient id="bg" x1="12" y1="14" x2="114" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DCFCE7"/>
+      <stop offset="1" stop-color="#E0F2FE"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#059669" flood-opacity=".16"/>
+    </filter>
+  </defs>
+  <rect x="10" y="10" width="108" height="108" rx="30" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <path d="M34 48h56a9 9 0 0 1 9 9v38a9 9 0 0 1-9 9H34a9 9 0 0 1-9-9V57a9 9 0 0 1 9-9Z" fill="#fff"/>
+    <path d="M45 37h34a8 8 0 0 1 8 8v10H37V45a8 8 0 0 1 8-8Z" fill="#34D399"/>
+    <path d="M57 60h13v12h12v13H70v12H57V85H45V72h12V60Z" fill="#10B981"/>
+    <path d="M91 30c-7-10-24-4-24 9 0 14 24 27 24 27s24-13 24-27c0-13-17-19-24-9Z" fill="#FB7185"/>
+    <path d="M35 24c7 0 13 6 13 13v12M48 49c0 8 7 15 15 15s15-7 15-15V37" fill="none" stroke="#2563EB" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="35" cy="24" r="5" fill="#2563EB"/>
+  </g>
+</svg>

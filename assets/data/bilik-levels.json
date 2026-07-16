@@ -3,136 +3,140 @@
     {
       "id": 1,
       "title": "Izin Sakit ke Wali Kelas",
+      "shortTitle": "Izin Sakit",
+      "prompt": "Kamu sedang demam. Tulis pesan sopan kepada Bapak Wali Kelas untuk izin tidak masuk hari ini.",
+      "target": "Saya izin tidak masuk sekolah hari ini karena sakit.",
       "comic": {
-        "narration": "Kamu sedang demam. Tulis pesan sopan kepada Bapak Wali Kelas untuk izin tidak masuk hari ini.",
-        "speechBubble": null,
-        "imagePath": "/comics/dosen/step-1.png"
+        "narration": "Kamu sedang demam dan perlu memberi kabar kepada wali kelas.",
+        "speechBubble": "Sampaikan izin dengan jelas dan sopan.",
+        "imagePath": "assets/comics/dosen/step-1.png"
       },
-      "tokens": [
-        "Selamat",
-        "pagi",
-        "Bapak",
-        "Wali",
-        "Kelas.",
-        "Saya",
-        "izin tidak masuk",
-        "sekolah",
-        "hari ini",
-        "karena sakit.",
-        "Terima",
-        "kasih",
-        "atas",
-        "perhatian",
-        "Bapak."
-      ],
-      "spok_answer": {
-        "S": "Saya",
-        "P": "izin tidak masuk",
-        "O": "sekolah",
-        "K": "hari ini karena sakit"
+      "tokens": ["Saya", "izin", "tidak", "masuk", "sekolah", "hari ini", "karena", "sakit"],
+      "tokenRoles": {
+        "Saya": "s",
+        "izin": "p",
+        "tidak": "p",
+        "masuk": "p",
+        "sekolah": "o",
+        "hari ini": "k",
+        "karena": "pel",
+        "sakit": "k"
       },
-      "explanation": "Susunan formal: Saya izin tidak masuk sekolah hari ini karena sakit."
+      "spok_answer": {"S": "Saya", "P": "izin tidak masuk", "O": "sekolah", "K": "hari ini karena sakit"},
+      "explanation": "Kalimat izin menyebutkan siapa, tujuan izin, waktu, dan alasan secara jelas."
     },
     {
       "id": 2,
       "title": "Bertanya Jadwal Remedial",
+      "shortTitle": "Jadwal Remedial",
+      "prompt": "Tanyakan kepada Ibu Guru Budi kapan jadwal perbaikan remedial matematika diadakan.",
+      "target": "Saya ingin bertanya jadwal remedial matematika kepada Ibu Budi.",
       "comic": {
-        "narration": "Dosen membalas...",
-        "speechBubble": null,
-        "imagePath": "/comics/dosen/step-2.png"
+        "narration": "Kamu belum mengetahui jadwal remedial matematika.",
+        "speechBubble": "Tanyakan jadwal dengan sapaan yang sopan.",
+        "imagePath": "assets/comics/dosen/step-2.png"
       },
-      "tokens": [],
-      "spok_answer": {
-        "S": "",
-        "P": "",
-        "O": "",
-        "K": ""
+      "tokens": ["Saya", "ingin bertanya", "jadwal remedial", "matematika", "kepada", "Ibu Budi"],
+      "tokenRoles": {
+        "Saya": "s",
+        "ingin bertanya": "p",
+        "jadwal remedial": "o",
+        "matematika": "o",
+        "kepada": "pel",
+        "Ibu Budi": "k"
       },
-      "explanation": ""
+      "spok_answer": {"S": "Saya", "P": "ingin bertanya", "O": "jadwal remedial matematika", "K": "kepada Ibu Budi"},
+      "explanation": "Pertanyaan formal menyampaikan tujuan dan pihak yang dituju dengan jelas."
     },
     {
       "id": 3,
-      "title": "Meminjam Alat ke Perpustakaan",
+      "title": "Meminjam Alat ke Petugas Lab",
+      "shortTitle": "Pinjam Proyektor",
+      "prompt": "Kamu butuh proyektor untuk presentasi. Mintalah izin kepada petugas laboratorium.",
+      "target": "Saya meminjam proyektor untuk presentasi hari ini.",
       "comic": {
-        "narration": "Meminjam alat...",
-        "speechBubble": null,
-        "imagePath": "/comics/dosen/step-3.png"
+        "narration": "Kelompokmu membutuhkan proyektor untuk presentasi kelas.",
+        "speechBubble": "Sebutkan alat, tujuan, dan waktunya.",
+        "imagePath": "assets/comics/dosen/step-3.png"
       },
-      "tokens": [],
-      "spok_answer": {
-        "S": "",
-        "P": "",
-        "O": "",
-        "K": ""
+      "tokens": ["Saya", "meminjam", "proyektor", "untuk presentasi", "hari ini"],
+      "tokenRoles": {
+        "Saya": "s",
+        "meminjam": "p",
+        "proyektor": "o",
+        "untuk presentasi": "pel",
+        "hari ini": "k"
       },
-      "explanation": ""
+      "spok_answer": {"S": "Saya", "P": "meminjam", "O": "proyektor", "K": "untuk presentasi hari ini"},
+      "explanation": "Permintaan menyebutkan alat yang dibutuhkan, tujuan, dan waktu pemakaian."
     }
   ],
   "profesional": [
     {
       "id": 1,
-      "title": "Melamar Magang (Email)",
+      "title": "Melamar Magang",
+      "shortTitle": "Email Magang",
+      "prompt": "Tulis satu kalimat pembuka di email untuk mendaftar program magang di Perusahaan X.",
+      "target": "Saya mengajukan diri untuk mengikuti program magang di perusahaan Bapak.",
       "comic": {
-        "narration": "Tulis email profesional untuk mendaftar program magang di Perusahaan X.",
-        "speechBubble": null,
-        "imagePath": "/comics/kerja/step-1.png"
+        "narration": "Kamu menemukan program magang yang sesuai dengan minatmu.",
+        "speechBubble": "Sampaikan tujuan email secara profesional.",
+        "imagePath": "assets/comics/kerja/step-1.png"
       },
-      "tokens": [
-        "Yth.",
-        "Bapak/Ibu",
-        "HRD.",
-        "Saya",
-        "mengajukan diri",
-        "untuk mengikuti program magang",
-        "di perusahaan Bapak.",
-        "Atas",
-        "perhatian",
-        "Bapak,",
-        "saya ucapkan",
-        "terima",
-        "kasih."
-      ],
-      "spok_answer": {
-        "S": "Saya",
-        "P": "mengajukan diri",
-        "O": "untuk mengikuti program magang",
-        "K": "di perusahaan Bapak"
+      "tokens": ["Saya", "mengajukan diri", "untuk mengikuti", "program magang", "di perusahaan Bapak"],
+      "tokenRoles": {
+        "Saya": "s",
+        "mengajukan diri": "p",
+        "untuk mengikuti": "pel",
+        "program magang": "o",
+        "di perusahaan Bapak": "k"
       },
-      "explanation": "Susunan formal: Saya mengajukan diri untuk mengikuti program magang di perusahaan Bapak."
+      "spok_answer": {"S": "Saya", "P": "mengajukan diri", "O": "program magang", "K": "di perusahaan Bapak"},
+      "explanation": "Pembuka email profesional menyebutkan tujuan dan perusahaan yang dituju."
     },
     {
       "id": 2,
       "title": "Membalas Pesan HRD",
+      "shortTitle": "Balas HRD",
+      "prompt": "HRD perusahaan memintamu datang interview besok pagi. Balas pesan tersebut dengan bersedia.",
+      "target": "Saya bersedia datang untuk wawancara besok pagi.",
       "comic": {
-        "narration": "Membalas...",
-        "speechBubble": null,
-        "imagePath": "/comics/kerja/step-2.png"
+        "narration": "HRD mengundangmu untuk mengikuti wawancara besok pagi.",
+        "speechBubble": "Balas undangan dengan kepastian yang jelas.",
+        "imagePath": "assets/comics/kerja/step-2.png"
       },
-      "tokens": [],
-      "spok_answer": {
-        "S": "",
-        "P": "",
-        "O": "",
-        "K": ""
+      "tokens": ["Saya", "bersedia datang", "untuk wawancara", "besok pagi"],
+      "tokenRoles": {
+        "Saya": "s",
+        "bersedia datang": "p",
+        "untuk wawancara": "o",
+        "besok pagi": "k"
       },
-      "explanation": ""
+      "spok_answer": {"S": "Saya", "P": "bersedia datang", "O": "untuk wawancara", "K": "besok pagi"},
+      "explanation": "Balasan yang baik memberi kepastian kehadiran, tujuan, dan waktu."
     },
     {
       "id": 3,
-      "title": "Izin Terlambat ke Atasan",
+      "title": "Izin ke Pembimbing Magang",
+      "shortTitle": "Izin Terlambat",
+      "prompt": "Jalanan macet total. Beri tahu pembimbing magangmu bahwa kamu akan datang terlambat.",
+      "target": "Saya akan datang terlambat hari ini karena jalan macet.",
       "comic": {
-        "narration": "Terlambat...",
-        "speechBubble": null,
-        "imagePath": "/comics/kerja/step-3.png"
+        "narration": "Perjalanan ke tempat magang terhambat kemacetan.",
+        "speechBubble": "Beri kabar lebih awal dan jelaskan alasannya.",
+        "imagePath": "assets/comics/kerja/step-3.png"
       },
-      "tokens": [],
-      "spok_answer": {
-        "S": "",
-        "P": "",
-        "O": "",
-        "K": ""
+      "tokens": ["Saya", "akan datang", "terlambat", "hari ini", "karena", "jalan macet"],
+      "tokenRoles": {
+        "Saya": "s",
+        "akan datang": "p",
+        "terlambat": "p",
+        "hari ini": "k",
+        "karena": "pel",
+        "jalan macet": "k"
       },
-      "explanation": ""
+      "spok_answer": {"S": "Saya", "P": "akan datang terlambat", "O": "", "K": "hari ini karena jalan macet"},
+      "explanation": "Pesan izin menyampaikan keadaan, waktu, dan alasan tanpa bertele-tele."
     }
   ]
 }

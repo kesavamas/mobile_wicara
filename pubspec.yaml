@@ -38,6 +38,7 @@ dependencies:
     shared_preferences: ^2.2.3
     confetti: ^0.7.0
     google_fonts: ^6.2.1
+    flutter_svg: ^2.3.0
 
 dev_dependencies:
     flutter_test:
@@ -65,10 +66,17 @@ flutter:
       - assets/logo.png
       - assets/data/bilik.json
       - assets/data/bilik-levels.json
+      - assets/data/revision3-content.json
       - assets/comics/
       - assets/comics/dosen/
       - assets/comics/kerja/
       - assets/comics/kesehatan/
       - assets/comics/mobilitas/
       - assets/comics/transaksi-jasa/
+      - assets/revision3/icons/
+      - assets/revision3/patterns/
+      - assets/revision3/comics/
+      - assets/icons/
+      - assets/illustrations/
+      - assets/badges/
 

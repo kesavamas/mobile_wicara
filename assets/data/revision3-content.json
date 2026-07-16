@@ -1,0 +1,1850 @@
+{
+  "biliks": [
+    {
+      "id": "sekolah",
+      "title": "Bilik Sekolah",
+      "subtitle": "Komunikasi Formal di Sekolah",
+      "description": "Belajar menyusun pesan untuk guru dan lingkungan sekolah.",
+      "theme": "school",
+      "order": 1,
+      "published": true
+    },
+    {
+      "id": "profesional",
+      "title": "Bilik Profesional",
+      "subtitle": "Persiapan Magang dan Dunia Kerja",
+      "description": "Latihan berkomunikasi untuk magang dan dunia kerja.",
+      "theme": "work",
+      "order": 2,
+      "published": true
+    }
+  ],
+  "missions": [
+    {
+      "id": "sekolah-1",
+      "bilikId": "sekolah",
+      "order": 1,
+      "prerequisiteMissionId": null,
+      "title": "Izin Sakit ke Wali Kelas",
+      "description": "Belajar menyampaikan izin dengan sopan dan jelas.",
+      "rewardXP": 50,
+      "studentName": "Raka",
+      "otherName": "Bapak Wali Kelas",
+      "scene": "bedroom",
+      "otherPersona": "wali-kelas",
+      "objectives": [
+        "Memberi salam",
+        "Menyampaikan izin",
+        "Menjelaskan alasan"
+      ],
+      "guided": {
+        "frames": [
+          {
+            "caption": "Pagi ini, Raka merasa demam.",
+            "expr": "sick"
+          },
+          {
+            "caption": "Raka perlu memberi tahu wali kelas bahwa ia tidak dapat masuk sekolah.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Bantu Raka menyusun pesannya.",
+            "expr": "thinking"
+          }
+        ],
+        "opening": [
+          {
+            "who": "student",
+            "text": "Aku harus menghubungi Bapak Wali Kelas. Sebaiknya aku mulai dari mana?"
+          },
+          {
+            "who": "wika",
+            "text": "Mulai dengan salam dan sapaan yang sopan dulu!"
+          },
+          {
+            "who": "other",
+            "text": "Selamat pagi, Raka. Ada yang bisa Bapak bantu?"
+          }
+        ],
+        "rounds": [
+          {
+            "title": "Percakapan 1 dari 3",
+            "objective": "Balas salam dari Bapak Wali Kelas.",
+            "cards": [
+              {
+                "text": "Selamat",
+                "kind": "salam"
+              },
+              {
+                "text": "pagi",
+                "kind": "waktu"
+              },
+              {
+                "text": "Pak",
+                "kind": "sapaan"
+              },
+              {
+                "text": "Besok",
+                "kind": "waktu",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Selamat",
+              "pagi",
+              "Pak"
+            ],
+            "targetSentence": "Selamat pagi, Pak.",
+            "hintText": "Mulai dari salam, lalu waktu hari, kemudian panggil Bapak Guru dengan sopan.",
+            "wrongHintText": "Susunannya hampir tepat. Coba pindahkan kartu sapaan ke bagian akhir.",
+            "slotLabels": [
+              "Salam",
+              "Waktu",
+              "Sapaan"
+            ]
+          },
+          {
+            "title": "Percakapan 2 dari 3",
+            "objective": "Sampaikan bahwa Raka ingin izin tidak masuk sekolah.",
+            "cards": [
+              {
+                "text": "Saya",
+                "kind": "s"
+              },
+              {
+                "text": "izin",
+                "kind": "p"
+              },
+              {
+                "text": "tidak masuk",
+                "kind": "p"
+              },
+              {
+                "text": "sekolah",
+                "kind": "o"
+              },
+              {
+                "text": "hari ini",
+                "kind": "k"
+              },
+              {
+                "text": "kemarin",
+                "kind": "k",
+                "distractor": true
+              },
+              {
+                "text": "bermain",
+                "kind": "p",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Saya",
+              "izin",
+              "tidak masuk",
+              "sekolah",
+              "hari ini"
+            ],
+            "targetSentence": "Saya izin tidak masuk sekolah hari ini.",
+            "hintText": "Mulai dari siapa (S), lalu apa yang dilakukan (P), tujuan (O), dan kapan (K).",
+            "wrongHintText": "Pesannya sudah terbentuk. Coba letakkan kartu kuning sebagai keterangan waktu.",
+            "slotLabels": [
+              "Siapa?",
+              "Melakukan apa?",
+              "Apa?",
+              "Tujuannya?",
+              "Kapan?"
+            ]
+          },
+          {
+            "title": "Percakapan 3 dari 3",
+            "objective": "Jelaskan alasan Raka tidak masuk sekolah.",
+            "cards": [
+              {
+                "text": "karena",
+                "kind": "pel"
+              },
+              {
+                "text": "saya",
+                "kind": "s"
+              },
+              {
+                "text": "sedang",
+                "kind": "p"
+              },
+              {
+                "text": "sakit",
+                "kind": "p"
+              },
+              {
+                "text": "bekerja",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "terlambat",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "karena",
+              "saya",
+              "sedang",
+              "sakit"
+            ],
+            "targetSentence": "karena saya sedang sakit.",
+            "hintText": "Kata 'karena' membantu menjelaskan alasan. Letakkan di awal.",
+            "wrongHintText": "Hampir tepat! Pastikan kata penghubung ada di awal kalimat.",
+            "slotLabels": [
+              "Penghubung",
+              "Siapa?",
+              "Keadaan",
+              "Alasan"
+            ]
+          }
+        ],
+        "responses": [
+          [
+            {
+              "who": "student",
+              "text": "Selamat pagi, Pak."
+            },
+            {
+              "who": "other",
+              "text": "Selamat pagi, Raka. Mengapa kamu tidak berada di sekolah hari ini?"
+            },
+            {
+              "who": "wika",
+              "text": "Bagus! Sekarang sampaikan maksud utamanya."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Saya izin tidak masuk sekolah hari ini."
+            },
+            {
+              "who": "other",
+              "text": "Baik, Raka. Apakah kamu sedang sakit?"
+            },
+            {
+              "who": "wika",
+              "text": "Terakhir, jelaskan alasannya agar pesan lebih lengkap."
+            }
+          ]
+        ],
+        "ending": [
+          {
+            "who": "student",
+            "text": "Selamat pagi, Pak. Saya izin tidak masuk sekolah hari ini karena sakit."
+          },
+          {
+            "who": "other",
+            "text": "Baik, Raka. Terima kasih sudah memberi tahu. Silakan beristirahat dan semoga lekas sembuh."
+          },
+          {
+            "who": "student",
+            "text": "Terima kasih, Pak."
+          },
+          {
+            "who": "wika",
+            "text": "Pesan Raka sudah lengkap, jelas, dan sopan! 🎉"
+          }
+        ],
+        "roundLabels": [
+          "Salam",
+          "Maksud Pesan",
+          "Alasan"
+        ],
+        "fullMessage": "Selamat pagi, Pak. Saya izin tidak masuk sekolah hari ini karena sakit."
+      },
+      "independent": {
+        "kind": "chat",
+        "contactName": "Bapak Wali Kelas",
+        "instruction": "Kamu sedang demam. Tulis pesan sopan kepada Bapak Wali Kelas untuk izin tidak masuk hari ini.",
+        "placeholder": "Tulis pesanmu di sini..."
+      },
+      "published": true
+    },
+    {
+      "id": "sekolah-2",
+      "bilikId": "sekolah",
+      "order": 2,
+      "prerequisiteMissionId": "sekolah-1",
+      "title": "Bertanya Jadwal Remedial",
+      "description": "Belajar bertanya dengan sopan kepada guru.",
+      "rewardXP": 50,
+      "studentName": "Raka",
+      "otherName": "Ibu Guru Matematika",
+      "scene": "classroom",
+      "otherPersona": "ibu-guru",
+      "objectives": [
+        "Memberi salam",
+        "Menyampaikan maksud",
+        "Menanyakan waktu",
+        "Berterima kasih"
+      ],
+      "guided": {
+        "frames": [
+          {
+            "caption": "Hasil ulangan matematika dibagikan. Nilai Raka belum mencukupi.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Raka ingin ikut remedial, tetapi ia belum tahu jadwalnya.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Sepulang pelajaran, Raka memberanikan diri mendatangi meja Ibu Guru. Bantu Raka bertanya dengan sopan.",
+            "expr": "neutral"
+          }
+        ],
+        "opening": [
+          {
+            "who": "student",
+            "text": "Aku harus bertanya jadwal remedial kepada Ibu Guru. Deg-degan... aku mulai dari mana, ya?"
+          },
+          {
+            "who": "wika",
+            "text": "Tenang! Awali dengan salam sesuai waktunya — sekarang siang hari."
+          },
+          {
+            "who": "other",
+            "text": "Selamat siang, Raka. Ada yang ingin kamu tanyakan?"
+          }
+        ],
+        "rounds": [
+          {
+            "title": "Percakapan 1 dari 4",
+            "objective": "Balas salam dari Ibu Guru.",
+            "cards": [
+              {
+                "text": "Selamat",
+                "kind": "salam"
+              },
+              {
+                "text": "siang",
+                "kind": "waktu"
+              },
+              {
+                "text": "Bu",
+                "kind": "sapaan"
+              },
+              {
+                "text": "Kemarin",
+                "kind": "waktu",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Selamat",
+              "siang",
+              "Bu"
+            ],
+            "targetSentence": "Selamat siang, Bu.",
+            "hintText": "Salam dimulai dari kata 'Selamat', lalu waktu, lalu sapaan untuk Ibu Guru.",
+            "wrongHintText": "Susunannya hampir tepat. Kartu sapaan diletakkan paling akhir.",
+            "slotLabels": [
+              "Salam",
+              "Waktu",
+              "Sapaan"
+            ]
+          },
+          {
+            "title": "Percakapan 2 dari 4",
+            "objective": "Sampaikan maksud Raka ingin bertanya.",
+            "cards": [
+              {
+                "text": "Saya",
+                "kind": "s"
+              },
+              {
+                "text": "ingin bertanya",
+                "kind": "p"
+              },
+              {
+                "text": "jadwal remedial",
+                "kind": "o"
+              },
+              {
+                "text": "matematika",
+                "kind": "pel"
+              },
+              {
+                "text": "bermain",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "besok",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Saya",
+              "ingin bertanya",
+              "jadwal remedial",
+              "matematika"
+            ],
+            "targetSentence": "Saya ingin bertanya jadwal remedial matematika.",
+            "hintText": "Mulai dari siapa (S), lalu apa yang dilakukan (P), lalu hal yang ditanyakan (O).",
+            "wrongHintText": "Pesannya mulai terbentuk. Letakkan kartu hijau setelah kartu merah.",
+            "slotLabels": [
+              "Siapa?",
+              "Melakukan apa?",
+              "Menanyakan apa?",
+              "Pelajaran apa?"
+            ]
+          },
+          {
+            "title": "Percakapan 3 dari 4",
+            "objective": "Tanyakan kapan remedial dilaksanakan.",
+            "cards": [
+              {
+                "text": "Kapan",
+                "kind": "k"
+              },
+              {
+                "text": "remedial",
+                "kind": "o"
+              },
+              {
+                "text": "dilaksanakan",
+                "kind": "p"
+              },
+              {
+                "text": "Bu",
+                "kind": "sapaan"
+              },
+              {
+                "text": "dibatalkan",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "Pak",
+                "kind": "sapaan",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Kapan",
+              "remedial",
+              "dilaksanakan",
+              "Bu"
+            ],
+            "targetSentence": "Kapan remedial dilaksanakan, Bu?",
+            "hintText": "Kata tanya 'Kapan' diletakkan di awal kalimat.",
+            "wrongHintText": "Hampir tepat! Perhatikan sapaan yang sesuai untuk Ibu Guru.",
+            "slotLabels": [
+              "Kata tanya",
+              "Apa?",
+              "Tindakan",
+              "Sapaan"
+            ]
+          },
+          {
+            "title": "Percakapan 4 dari 4",
+            "objective": "Tutup percakapan dengan ucapan terima kasih.",
+            "cards": [
+              {
+                "text": "Terima kasih",
+                "kind": "salam"
+              },
+              {
+                "text": "atas",
+                "kind": "pel"
+              },
+              {
+                "text": "informasinya",
+                "kind": "o"
+              },
+              {
+                "text": "Bu",
+                "kind": "sapaan"
+              },
+              {
+                "text": "kemarin",
+                "kind": "k",
+                "distractor": true
+              },
+              {
+                "text": "maaf",
+                "kind": "p",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Terima kasih",
+              "atas",
+              "informasinya",
+              "Bu"
+            ],
+            "targetSentence": "Terima kasih atas informasinya, Bu.",
+            "hintText": "Ucapan terima kasih diletakkan di awal, lalu hal yang disyukuri, lalu sapaan.",
+            "wrongHintText": "Hampir rapi! Sapaan untuk Ibu Guru diletakkan di bagian akhir.",
+            "slotLabels": [
+              "Ungkapan",
+              "Penghubung",
+              "Apa?",
+              "Sapaan"
+            ]
+          }
+        ],
+        "responses": [
+          [
+            {
+              "who": "student",
+              "text": "Selamat siang, Bu."
+            },
+            {
+              "who": "other",
+              "text": "Selamat siang. Silakan, ada apa, Raka?"
+            },
+            {
+              "who": "wika",
+              "text": "Bagus! Sekarang sampaikan maksud pertanyaanmu dengan jelas."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Saya ingin bertanya jadwal remedial matematika."
+            },
+            {
+              "who": "other",
+              "text": "Oh iya, Ibu memang berencana mengadakan remedial minggu ini. Ada yang ingin kamu ketahui lagi?"
+            },
+            {
+              "who": "wika",
+              "text": "Kesempatan bagus! Tanyakan kapan remedialnya dilaksanakan."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Kapan remedial dilaksanakan, Bu?"
+            },
+            {
+              "who": "other",
+              "text": "Remedial dilaksanakan hari Kamis pukul 13.00 di ruang kelas ini. Jangan lupa membawa alat tulis, ya."
+            },
+            {
+              "who": "wika",
+              "text": "Informasinya sudah kamu dapat! Tutup percakapan dengan sopan."
+            }
+          ]
+        ],
+        "ending": [
+          {
+            "who": "student",
+            "text": "Terima kasih atas informasinya, Bu."
+          },
+          {
+            "who": "other",
+            "text": "Sama-sama, Raka. Ibu senang kamu bertanya dengan sopan. Belajar yang rajin untuk remedialnya, ya!"
+          },
+          {
+            "who": "student",
+            "text": "Baik, Bu. Saya akan belajar sungguh-sungguh."
+          },
+          {
+            "who": "wika",
+            "text": "Empat pesan Raka tersusun jelas dan sopan — pertanyaan pun terjawab! 🎉"
+          }
+        ],
+        "roundLabels": [
+          "Salam",
+          "Maksud Pesan",
+          "Pertanyaan",
+          "Penutup"
+        ],
+        "fullMessage": "Selamat siang, Bu. Saya ingin bertanya jadwal remedial matematika. Kapan remedial dilaksanakan, Bu? Terima kasih atas informasinya, Bu."
+      },
+      "independent": {
+        "kind": "chat",
+        "contactName": "Ibu Guru Matematika",
+        "instruction": "Nilai ulanganmu belum mencukupi. Tulis pesan sopan kepada Ibu Guru untuk menanyakan jadwal remedial matematika, lalu tutup dengan terima kasih.",
+        "placeholder": "Tulis pertanyaanmu di sini..."
+      },
+      "published": true
+    },
+    {
+      "id": "sekolah-3",
+      "bilikId": "sekolah",
+      "order": 3,
+      "prerequisiteMissionId": "sekolah-2",
+      "title": "Meminjam Alat ke Petugas Lab",
+      "description": "Belajar meminta izin meminjam dengan lengkap dan bertanggung jawab.",
+      "rewardXP": 50,
+      "studentName": "Raka",
+      "otherName": "Pak Petugas Lab",
+      "scene": "lab",
+      "otherPersona": "petugas-lab",
+      "objectives": [
+        "Memberi salam",
+        "Menyampaikan keperluan",
+        "Menjelaskan detail",
+        "Berjanji mengembalikan",
+        "Berterima kasih"
+      ],
+      "guided": {
+        "frames": [
+          {
+            "caption": "Besok kelompok Raka ada praktikum biologi: mengamati sel bawang.",
+            "expr": "neutral"
+          },
+          {
+            "caption": "Kelompoknya kebagian tugas menyiapkan mikroskop dari laboratorium.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Raka mendatangi ruang alat laboratorium. Bantu Raka menyampaikan keperluannya dengan lengkap.",
+            "expr": "thinking"
+          }
+        ],
+        "opening": [
+          {
+            "who": "student",
+            "text": "Aku mewakili kelompok untuk meminjam mikroskop. Bagaimana cara memintanya dengan baik, ya?"
+          },
+          {
+            "who": "wika",
+            "text": "Pinjam-meminjam alat perlu pesan yang lengkap: salam, keperluan, detail, janji mengembalikan, dan terima kasih!"
+          },
+          {
+            "who": "other",
+            "text": "Selamat pagi. Ada yang bisa Bapak bantu?"
+          }
+        ],
+        "rounds": [
+          {
+            "title": "Percakapan 1 dari 5",
+            "objective": "Sapa petugas laboratorium.",
+            "cards": [
+              {
+                "text": "Selamat",
+                "kind": "salam"
+              },
+              {
+                "text": "pagi",
+                "kind": "waktu"
+              },
+              {
+                "text": "Pak",
+                "kind": "sapaan"
+              },
+              {
+                "text": "Nanti",
+                "kind": "waktu",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Selamat",
+              "pagi",
+              "Pak"
+            ],
+            "targetSentence": "Selamat pagi, Pak.",
+            "hintText": "Mulai dari salam, lalu waktu, lalu sapaan.",
+            "wrongHintText": "Susunannya hampir tepat. Periksa posisi kata waktunya.",
+            "slotLabels": [
+              "Salam",
+              "Waktu",
+              "Sapaan"
+            ]
+          },
+          {
+            "title": "Percakapan 2 dari 5",
+            "objective": "Sampaikan barang yang ingin dipinjam Raka.",
+            "cards": [
+              {
+                "text": "Saya",
+                "kind": "s"
+              },
+              {
+                "text": "ingin meminjam",
+                "kind": "p"
+              },
+              {
+                "text": "mikroskop",
+                "kind": "o"
+              },
+              {
+                "text": "untuk praktikum",
+                "kind": "k"
+              },
+              {
+                "text": "menjual",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "kemarin",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Saya",
+              "ingin meminjam",
+              "mikroskop",
+              "untuk praktikum"
+            ],
+            "targetSentence": "Saya ingin meminjam mikroskop untuk praktikum.",
+            "hintText": "Mulai dari siapa (S), lalu tindakan (P), barangnya (O), lalu tujuannya (K).",
+            "wrongHintText": "Pesannya mulai terbentuk. Kartu kuning menjelaskan tujuan, letakkan di akhir.",
+            "slotLabels": [
+              "Siapa?",
+              "Melakukan apa?",
+              "Barang apa?",
+              "Untuk apa?"
+            ]
+          },
+          {
+            "title": "Percakapan 3 dari 5",
+            "objective": "Jelaskan kapan praktikum dilaksanakan.",
+            "cards": [
+              {
+                "text": "Praktikum biologi",
+                "kind": "s"
+              },
+              {
+                "text": "dilaksanakan",
+                "kind": "p"
+              },
+              {
+                "text": "besok pagi",
+                "kind": "k"
+              },
+              {
+                "text": "dibatalkan",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "tadi malam",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Praktikum biologi",
+              "dilaksanakan",
+              "besok pagi"
+            ],
+            "targetSentence": "Praktikum biologi dilaksanakan besok pagi.",
+            "hintText": "Jelaskan kegiatannya (S), lalu tindakan (P), lalu waktunya (K).",
+            "wrongHintText": "Hampir tepat! Pilih keterangan waktu yang sesuai dengan cerita Raka.",
+            "slotLabels": [
+              "Kegiatan apa?",
+              "Tindakan",
+              "Kapan?"
+            ]
+          },
+          {
+            "title": "Percakapan 4 dari 5",
+            "objective": "Sampaikan kapan Raka akan mengembalikan mikroskop.",
+            "cards": [
+              {
+                "text": "Saya",
+                "kind": "s"
+              },
+              {
+                "text": "akan mengembalikannya",
+                "kind": "p"
+              },
+              {
+                "text": "besok siang",
+                "kind": "k"
+              },
+              {
+                "text": "setelah praktikum",
+                "kind": "pel"
+              },
+              {
+                "text": "membuangnya",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "tadi pagi",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Saya",
+              "akan mengembalikannya",
+              "besok siang",
+              "setelah praktikum"
+            ],
+            "targetSentence": "Saya akan mengembalikannya besok siang setelah praktikum.",
+            "hintText": "Janji pengembalian: siapa (S), tindakan (P), waktu (K), lalu keterangan tambahan.",
+            "wrongHintText": "Hampir rapi! Keterangan 'setelah praktikum' melengkapi kalimat di bagian akhir.",
+            "slotLabels": [
+              "Siapa?",
+              "Tindakan",
+              "Kapan?",
+              "Keterangan"
+            ]
+          },
+          {
+            "title": "Percakapan 5 dari 5",
+            "objective": "Tutup permintaan dengan ucapan terima kasih.",
+            "cards": [
+              {
+                "text": "Terima kasih",
+                "kind": "salam"
+              },
+              {
+                "text": "atas",
+                "kind": "pel"
+              },
+              {
+                "text": "bantuan",
+                "kind": "o"
+              },
+              {
+                "text": "Bapak",
+                "kind": "sapaan"
+              },
+              {
+                "text": "besok",
+                "kind": "k",
+                "distractor": true
+              },
+              {
+                "text": "meminjam",
+                "kind": "p",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Terima kasih",
+              "atas",
+              "bantuan",
+              "Bapak"
+            ],
+            "targetSentence": "Terima kasih atas bantuan Bapak.",
+            "hintText": "Mulai dari ungkapan terima kasih, lalu hal yang disyukuri, lalu sapaan.",
+            "wrongHintText": "Hampir tepat! Coba periksa urutan setelah kata 'atas'.",
+            "slotLabels": [
+              "Ungkapan",
+              "Penghubung",
+              "Apa?",
+              "Kepada siapa?"
+            ]
+          }
+        ],
+        "responses": [
+          [
+            {
+              "who": "student",
+              "text": "Selamat pagi, Pak."
+            },
+            {
+              "who": "other",
+              "text": "Selamat pagi. Ada keperluan apa?"
+            },
+            {
+              "who": "wika",
+              "text": "Bagus! Sekarang sampaikan barang yang ingin dipinjam."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Saya ingin meminjam mikroskop untuk praktikum."
+            },
+            {
+              "who": "other",
+              "text": "Boleh. Praktikumnya kapan dilaksanakan?"
+            },
+            {
+              "who": "wika",
+              "text": "Petugas perlu tahu detailnya — jelaskan waktunya."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Praktikum biologi dilaksanakan besok pagi."
+            },
+            {
+              "who": "other",
+              "text": "Baik, berarti mikroskopnya bisa diambil sore ini. Kapan akan dikembalikan?"
+            },
+            {
+              "who": "wika",
+              "text": "Peminjam yang baik selalu berjanji mengembalikan. Sampaikan janjinya!"
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Saya akan mengembalikannya besok siang setelah praktikum."
+            },
+            {
+              "who": "other",
+              "text": "Bagus, Bapak catat ya: satu mikroskop, kembali besok siang. Silakan isi buku peminjaman ini."
+            },
+            {
+              "who": "wika",
+              "text": "Hampir selesai! Tutup dengan ucapan terima kasih."
+            }
+          ]
+        ],
+        "ending": [
+          {
+            "who": "student",
+            "text": "Terima kasih atas bantuan Bapak."
+          },
+          {
+            "who": "other",
+            "text": "Sama-sama, Raka. Bapak senang kamu meminjam dengan cara yang benar. Semoga praktikumnya lancar!"
+          },
+          {
+            "who": "student",
+            "text": "Siap, Pak. Permisi."
+          },
+          {
+            "who": "wika",
+            "text": "Lima pesan Raka lengkap: salam, keperluan, detail, janji, dan terima kasih! 🎉"
+          }
+        ],
+        "roundLabels": [
+          "Salam",
+          "Keperluan",
+          "Detail",
+          "Janji",
+          "Penutup"
+        ],
+        "fullMessage": "Selamat pagi, Pak. Saya ingin meminjam mikroskop untuk praktikum. Praktikum biologi dilaksanakan besok pagi. Saya akan mengembalikannya besok siang setelah praktikum. Terima kasih atas bantuan Bapak."
+      },
+      "independent": {
+        "kind": "chat",
+        "contactName": "Pak Petugas Lab",
+        "instruction": "Besok kelompokmu praktikum biologi. Tulis pesan sopan kepada petugas lab untuk meminjam mikroskop: sebutkan keperluan, waktu praktikum, dan kapan kamu mengembalikannya.",
+        "placeholder": "Tulis permintaanmu di sini..."
+      },
+      "published": true
+    },
+    {
+      "id": "profesional-1",
+      "bilikId": "profesional",
+      "order": 1,
+      "prerequisiteMissionId": null,
+      "title": "Melamar Magang melalui Email",
+      "description": "Belajar menulis email lamaran magang yang sopan.",
+      "rewardXP": 75,
+      "studentName": "Naya",
+      "otherName": "Staf HRD",
+      "scene": "office",
+      "otherPersona": "hrd",
+      "objectives": [
+        "Menulis sapaan pembuka",
+        "Menyampaikan tujuan",
+        "Menutup dengan sopan"
+      ],
+      "guided": {
+        "frames": [
+          {
+            "caption": "Naya menemukan lowongan magang yang menarik.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Naya ingin mengirim email lamaran kepada HRD Perusahaan X.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Bantu Naya menyusun email yang sopan dan jelas.",
+            "expr": "neutral"
+          }
+        ],
+        "opening": [
+          {
+            "who": "student",
+            "text": "Aku harus mengirim email ke HRD. Bagaimana cara memulainya?"
+          },
+          {
+            "who": "wika",
+            "text": "Mulai dengan salam yang sopan kepada penerima email!"
+          },
+          {
+            "who": "other",
+            "text": "Halo, ada yang bisa kami bantu?"
+          }
+        ],
+        "rounds": [
+          {
+            "title": "Percakapan 1 dari 3",
+            "objective": "Buka email dengan sapaan yang sopan.",
+            "cards": [
+              {
+                "text": "Yth.",
+                "kind": "hormat"
+              },
+              {
+                "text": "Bapak/Ibu",
+                "kind": "sapaan"
+              },
+              {
+                "text": "HRD",
+                "kind": "o"
+              },
+              {
+                "text": "Besok",
+                "kind": "waktu",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Yth.",
+              "Bapak/Ibu",
+              "HRD"
+            ],
+            "targetSentence": "Yth. Bapak/Ibu HRD.",
+            "hintText": "Awali dengan kata penghormatan 'Yth.', lalu sapaan, lalu jabatan penerima.",
+            "wrongHintText": "Susunannya hampir tepat. Periksa urutan kata hormatnya.",
+            "slotLabels": [
+              "Penghormatan",
+              "Sapaan",
+              "Jabatan"
+            ]
+          },
+          {
+            "title": "Percakapan 2 dari 3",
+            "objective": "Sampaikan tujuan Naya mengirim email.",
+            "cards": [
+              {
+                "text": "Saya",
+                "kind": "s"
+              },
+              {
+                "text": "mengajukan diri",
+                "kind": "p"
+              },
+              {
+                "text": "untuk mengikuti",
+                "kind": "pel"
+              },
+              {
+                "text": "program magang",
+                "kind": "o"
+              },
+              {
+                "text": "bermain",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "kemarin",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Saya",
+              "mengajukan diri",
+              "untuk mengikuti",
+              "program magang"
+            ],
+            "targetSentence": "Saya mengajukan diri untuk mengikuti program magang.",
+            "hintText": "Mulai dari siapa (S), lalu apa yang dilakukan (P), dan tujuannya (O).",
+            "wrongHintText": "Pesannya mulai terbentuk. Periksa urutan kata tujuannya.",
+            "slotLabels": [
+              "Siapa?",
+              "Melakukan apa?",
+              "Untuk apa?",
+              "Program apa?"
+            ]
+          },
+          {
+            "title": "Percakapan 3 dari 3",
+            "objective": "Akhiri email dengan penutup yang sopan.",
+            "cards": [
+              {
+                "text": "Terima kasih",
+                "kind": "salam"
+              },
+              {
+                "text": "atas",
+                "kind": "pel"
+              },
+              {
+                "text": "perhatian",
+                "kind": "o"
+              },
+              {
+                "text": "Bapak/Ibu",
+                "kind": "sapaan"
+              },
+              {
+                "text": "besok",
+                "kind": "k",
+                "distractor": true
+              },
+              {
+                "text": "maaf",
+                "kind": "p",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Terima kasih",
+              "atas",
+              "perhatian",
+              "Bapak/Ibu"
+            ],
+            "targetSentence": "Terima kasih atas perhatian Bapak/Ibu.",
+            "hintText": "Penutup email yang baik dimulai dengan ungkapan terima kasih.",
+            "wrongHintText": "Hampir tepat! Coba perhatikan urutan kata penutupnya.",
+            "slotLabels": [
+              "Ungkapan",
+              "Penghubung",
+              "Apa?",
+              "Kepada siapa?"
+            ]
+          }
+        ],
+        "responses": [
+          [
+            {
+              "who": "student",
+              "text": "Yth. Bapak/Ibu HRD."
+            },
+            {
+              "who": "other",
+              "text": "Baik, terima kasih sapaannya. Apa tujuan email Anda?"
+            },
+            {
+              "who": "wika",
+              "text": "Sekarang sampaikan tujuannya dengan jelas!"
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Saya mengajukan diri untuk mengikuti program magang."
+            },
+            {
+              "who": "other",
+              "text": "Terima kasih. Apa ada yang ingin Anda tambahkan?"
+            },
+            {
+              "who": "wika",
+              "text": "Akhiri dengan penutup yang sopan!"
+            }
+          ]
+        ],
+        "ending": [
+          {
+            "who": "student",
+            "text": "Yth. Bapak/Ibu HRD. Saya mengajukan diri untuk mengikuti program magang. Terima kasih atas perhatian Bapak/Ibu."
+          },
+          {
+            "who": "other",
+            "text": "Email Anda sudah kami terima. Kami akan menghubungi Anda kembali."
+          },
+          {
+            "who": "student",
+            "text": "Terima kasih banyak, Bapak/Ibu."
+          },
+          {
+            "who": "wika",
+            "text": "Email Naya sudah lengkap, jelas, dan sopan! 🎉"
+          }
+        ],
+        "roundLabels": [
+          "Salam",
+          "Maksud Pesan",
+          "Penutup"
+        ],
+        "fullMessage": "Yth. Bapak/Ibu HRD. Saya mengajukan diri untuk mengikuti program magang. Terima kasih atas perhatian Bapak/Ibu."
+      },
+      "independent": {
+        "kind": "email",
+        "contactName": "HRD Perusahaan X",
+        "emailSubject": "Permohonan Magang",
+        "instruction": "Tulis satu kalimat pembuka email untuk menyampaikan keinginan mengikuti program magang di Perusahaan X.",
+        "placeholder": "Tulis pembuka email di sini..."
+      },
+      "published": true
+    },
+    {
+      "id": "profesional-2",
+      "bilikId": "profesional",
+      "order": 2,
+      "prerequisiteMissionId": "profesional-1",
+      "title": "Membalas Pesan HRD",
+      "description": "Belajar membalas undangan wawancara dengan lengkap.",
+      "rewardXP": 75,
+      "studentName": "Naya",
+      "otherName": "Staf HRD",
+      "scene": "office",
+      "otherPersona": "hrd",
+      "objectives": [
+        "Memberi salam",
+        "Mengonfirmasi kehadiran",
+        "Menanyakan tempat",
+        "Berterima kasih"
+      ],
+      "guided": {
+        "frames": [
+          {
+            "caption": "Ponsel Naya berbunyi: ada pesan dari HRD Perusahaan X. Lamaran magangnya lolos seleksi awal!",
+            "expr": "happy"
+          },
+          {
+            "caption": "HRD mengundang Naya untuk wawancara hari Senin pukul 10.00.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Naya harus membalas dengan jelas: konfirmasi hadir, dan pastikan tempatnya. Bantu Naya menyusun balasannya.",
+            "expr": "neutral"
+          }
+        ],
+        "opening": [
+          {
+            "who": "student",
+            "text": "Aku diundang wawancara! Aku harus membalas dengan baik. Mulai dari mana, ya?"
+          },
+          {
+            "who": "wika",
+            "text": "Balasan yang baik dimulai dengan salam, lalu konfirmasi yang jelas."
+          },
+          {
+            "who": "other",
+            "text": "Selamat siang, Naya. Kami mengundang Anda wawancara hari Senin pukul 10.00. Apakah Anda bersedia?"
+          }
+        ],
+        "rounds": [
+          {
+            "title": "Percakapan 1 dari 4",
+            "objective": "Balas salam dari Staf HRD.",
+            "cards": [
+              {
+                "text": "Selamat",
+                "kind": "salam"
+              },
+              {
+                "text": "siang",
+                "kind": "waktu"
+              },
+              {
+                "text": "Bapak/Ibu",
+                "kind": "sapaan"
+              },
+              {
+                "text": "Besok",
+                "kind": "waktu",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Selamat",
+              "siang",
+              "Bapak/Ibu"
+            ],
+            "targetSentence": "Selamat siang, Bapak/Ibu.",
+            "hintText": "Salam dimulai dari 'Selamat', lalu waktu, lalu sapaan formal.",
+            "wrongHintText": "Susunannya hampir tepat. Sapaan diletakkan di bagian akhir.",
+            "slotLabels": [
+              "Salam",
+              "Waktu",
+              "Sapaan"
+            ]
+          },
+          {
+            "title": "Percakapan 2 dari 4",
+            "objective": "Konfirmasikan kehadiran Naya untuk wawancara.",
+            "cards": [
+              {
+                "text": "Saya",
+                "kind": "s"
+              },
+              {
+                "text": "bersedia hadir",
+                "kind": "p"
+              },
+              {
+                "text": "untuk wawancara",
+                "kind": "pel"
+              },
+              {
+                "text": "hari Senin",
+                "kind": "k"
+              },
+              {
+                "text": "menolak hadir",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "kemarin",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Saya",
+              "bersedia hadir",
+              "untuk wawancara",
+              "hari Senin"
+            ],
+            "targetSentence": "Saya bersedia hadir untuk wawancara hari Senin.",
+            "hintText": "Mulai dari siapa (S), lalu kesediaan (P), keperluannya, dan waktunya (K).",
+            "wrongHintText": "Pesannya mulai terbentuk. Pilih kartu yang menyatakan kesediaan hadir.",
+            "slotLabels": [
+              "Siapa?",
+              "Kesediaan",
+              "Untuk apa?",
+              "Kapan?"
+            ]
+          },
+          {
+            "title": "Percakapan 3 dari 4",
+            "objective": "Tanyakan tempat wawancara agar tidak salah datang.",
+            "cards": [
+              {
+                "text": "Apakah",
+                "kind": "pel"
+              },
+              {
+                "text": "wawancara",
+                "kind": "s"
+              },
+              {
+                "text": "dilaksanakan",
+                "kind": "p"
+              },
+              {
+                "text": "di kantor",
+                "kind": "k"
+              },
+              {
+                "text": "dibatalkan",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "di pasar",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Apakah",
+              "wawancara",
+              "dilaksanakan",
+              "di kantor"
+            ],
+            "targetSentence": "Apakah wawancara dilaksanakan di kantor?",
+            "hintText": "Kata tanya 'Apakah' diletakkan di awal, lalu hal yang ditanyakan.",
+            "wrongHintText": "Hampir tepat! Pilih keterangan tempat yang masuk akal untuk wawancara.",
+            "slotLabels": [
+              "Kata tanya",
+              "Apa?",
+              "Tindakan",
+              "Di mana?"
+            ]
+          },
+          {
+            "title": "Percakapan 4 dari 4",
+            "objective": "Tutup balasan dengan ucapan terima kasih.",
+            "cards": [
+              {
+                "text": "Terima kasih",
+                "kind": "salam"
+              },
+              {
+                "text": "atas",
+                "kind": "pel"
+              },
+              {
+                "text": "kesempatan",
+                "kind": "o"
+              },
+              {
+                "text": "yang diberikan",
+                "kind": "pel"
+              },
+              {
+                "text": "besok",
+                "kind": "k",
+                "distractor": true
+              },
+              {
+                "text": "maaf",
+                "kind": "p",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Terima kasih",
+              "atas",
+              "kesempatan",
+              "yang diberikan"
+            ],
+            "targetSentence": "Terima kasih atas kesempatan yang diberikan.",
+            "hintText": "Mulai dari ungkapan terima kasih, lalu hal yang disyukuri.",
+            "wrongHintText": "Hampir tepat! Periksa urutan kata setelah 'atas'.",
+            "slotLabels": [
+              "Ungkapan",
+              "Penghubung",
+              "Apa?",
+              "Keterangan"
+            ]
+          }
+        ],
+        "responses": [
+          [
+            {
+              "who": "student",
+              "text": "Selamat siang, Bapak/Ibu."
+            },
+            {
+              "who": "other",
+              "text": "Selamat siang. Bagaimana dengan undangan wawancaranya?"
+            },
+            {
+              "who": "wika",
+              "text": "Sekarang konfirmasikan kehadiranmu dengan jelas."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Saya bersedia hadir untuk wawancara hari Senin."
+            },
+            {
+              "who": "other",
+              "text": "Baik, kami catat kehadiran Anda. Ada yang ingin ditanyakan?"
+            },
+            {
+              "who": "wika",
+              "text": "Jangan sampai salah tempat! Tanyakan lokasi wawancaranya."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Apakah wawancara dilaksanakan di kantor?"
+            },
+            {
+              "who": "other",
+              "text": "Benar, wawancara dilaksanakan di kantor kami, lantai 2, ruang rapat utama. Mohon hadir 15 menit lebih awal."
+            },
+            {
+              "who": "wika",
+              "text": "Semua informasi sudah jelas. Tutup dengan sopan!"
+            }
+          ]
+        ],
+        "ending": [
+          {
+            "who": "student",
+            "text": "Terima kasih atas kesempatan yang diberikan."
+          },
+          {
+            "who": "other",
+            "text": "Sama-sama, Naya. Balasan Anda jelas dan profesional. Sampai bertemu hari Senin!"
+          },
+          {
+            "who": "student",
+            "text": "Baik, sampai bertemu, Bapak/Ibu."
+          },
+          {
+            "who": "wika",
+            "text": "Balasan Naya lengkap: salam, konfirmasi, pertanyaan, dan penutup! 🎉"
+          }
+        ],
+        "roundLabels": [
+          "Salam",
+          "Konfirmasi",
+          "Pertanyaan",
+          "Penutup"
+        ],
+        "fullMessage": "Selamat siang, Bapak/Ibu. Saya bersedia hadir untuk wawancara hari Senin. Apakah wawancara dilaksanakan di kantor? Terima kasih atas kesempatan yang diberikan."
+      },
+      "independent": {
+        "kind": "email",
+        "contactName": "HRD Perusahaan X",
+        "emailSubject": "Konfirmasi Undangan Wawancara",
+        "instruction": "HRD mengundangmu wawancara hari Senin pukul 10.00. Tulis balasan sopan: konfirmasi kehadiranmu dan tanyakan tempat wawancaranya.",
+        "placeholder": "Tulis balasanmu di sini..."
+      },
+      "published": true
+    },
+    {
+      "id": "profesional-3",
+      "bilikId": "profesional",
+      "order": 3,
+      "prerequisiteMissionId": "profesional-2",
+      "title": "Izin ke Pembimbing Magang",
+      "description": "Belajar menyampaikan izin di tempat magang secara lengkap.",
+      "rewardXP": 75,
+      "studentName": "Naya",
+      "otherName": "Ibu Pembimbing Magang",
+      "scene": "mentor",
+      "otherPersona": "pembimbing",
+      "objectives": [
+        "Memberi salam",
+        "Menyampaikan izin",
+        "Menjelaskan alasan",
+        "Memberi kepastian waktu",
+        "Berterima kasih"
+      ],
+      "guided": {
+        "frames": [
+          {
+            "caption": "Naya sudah dua minggu magang di Perusahaan X. Pagi ini ia harus kontrol ke dokter gigi.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Jadwal kontrolnya membuat Naya akan datang terlambat ke kantor.",
+            "expr": "thinking"
+          },
+          {
+            "caption": "Izin yang baik disampaikan lebih awal dan lengkap. Bantu Naya menyusun pesan izinnya kepada Ibu Pembimbing.",
+            "expr": "neutral"
+          }
+        ],
+        "opening": [
+          {
+            "who": "student",
+            "text": "Aku harus memberi tahu Ibu Pembimbing bahwa aku datang terlambat. Apa saja yang perlu kusampaikan?"
+          },
+          {
+            "who": "wika",
+            "text": "Izin yang lengkap berisi: salam, izin, alasan, kepastian waktu tiba, dan terima kasih."
+          },
+          {
+            "who": "other",
+            "text": "Selamat pagi, Naya. Ada yang ingin disampaikan?"
+          }
+        ],
+        "rounds": [
+          {
+            "title": "Percakapan 1 dari 5",
+            "objective": "Balas salam dari Ibu Pembimbing.",
+            "cards": [
+              {
+                "text": "Selamat",
+                "kind": "salam"
+              },
+              {
+                "text": "pagi",
+                "kind": "waktu"
+              },
+              {
+                "text": "Bu",
+                "kind": "sapaan"
+              },
+              {
+                "text": "Kemarin",
+                "kind": "waktu",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Selamat",
+              "pagi",
+              "Bu"
+            ],
+            "targetSentence": "Selamat pagi, Bu.",
+            "hintText": "Mulai dari salam, lalu waktu, lalu sapaan.",
+            "wrongHintText": "Susunannya hampir tepat. Periksa posisi kata waktunya.",
+            "slotLabels": [
+              "Salam",
+              "Waktu",
+              "Sapaan"
+            ]
+          },
+          {
+            "title": "Percakapan 2 dari 5",
+            "objective": "Sampaikan bahwa Naya izin datang terlambat.",
+            "cards": [
+              {
+                "text": "Saya",
+                "kind": "s"
+              },
+              {
+                "text": "izin",
+                "kind": "p"
+              },
+              {
+                "text": "datang terlambat",
+                "kind": "p"
+              },
+              {
+                "text": "hari ini",
+                "kind": "k"
+              },
+              {
+                "text": "pulang cepat",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "kemarin",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Saya",
+              "izin",
+              "datang terlambat",
+              "hari ini"
+            ],
+            "targetSentence": "Saya izin datang terlambat hari ini.",
+            "hintText": "Mulai dari siapa (S), lalu izin (P), keadaannya, dan kapan (K).",
+            "wrongHintText": "Pesannya mulai terbentuk. Letakkan kartu kuning sebagai keterangan waktu.",
+            "slotLabels": [
+              "Siapa?",
+              "Izin",
+              "Keadaan",
+              "Kapan?"
+            ]
+          },
+          {
+            "title": "Percakapan 3 dari 5",
+            "objective": "Jelaskan alasan Naya datang terlambat.",
+            "cards": [
+              {
+                "text": "karena",
+                "kind": "pel"
+              },
+              {
+                "text": "saya",
+                "kind": "s"
+              },
+              {
+                "text": "harus kontrol",
+                "kind": "p"
+              },
+              {
+                "text": "ke dokter gigi",
+                "kind": "k"
+              },
+              {
+                "text": "ke pasar",
+                "kind": "k",
+                "distractor": true
+              },
+              {
+                "text": "menonton",
+                "kind": "p",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "karena",
+              "saya",
+              "harus kontrol",
+              "ke dokter gigi"
+            ],
+            "targetSentence": "karena saya harus kontrol ke dokter gigi.",
+            "hintText": "Kata 'karena' menjelaskan alasan. Letakkan di awal.",
+            "wrongHintText": "Hampir tepat! Pilih tujuan yang sesuai dengan cerita Naya.",
+            "slotLabels": [
+              "Penghubung",
+              "Siapa?",
+              "Keharusan",
+              "Ke mana?"
+            ]
+          },
+          {
+            "title": "Percakapan 4 dari 5",
+            "objective": "Beri kepastian pukul berapa Naya tiba di kantor.",
+            "cards": [
+              {
+                "text": "Saya",
+                "kind": "s"
+              },
+              {
+                "text": "akan tiba",
+                "kind": "p"
+              },
+              {
+                "text": "di kantor",
+                "kind": "k"
+              },
+              {
+                "text": "pukul sepuluh",
+                "kind": "k"
+              },
+              {
+                "text": "pulang",
+                "kind": "p",
+                "distractor": true
+              },
+              {
+                "text": "di rumah",
+                "kind": "k",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Saya",
+              "akan tiba",
+              "di kantor",
+              "pukul sepuluh"
+            ],
+            "targetSentence": "Saya akan tiba di kantor pukul sepuluh.",
+            "hintText": "Kepastian waktu: siapa (S), tindakan (P), tempat (K), lalu jamnya (K).",
+            "wrongHintText": "Hampir rapi! Keterangan tempat dulu, baru keterangan jam.",
+            "slotLabels": [
+              "Siapa?",
+              "Tindakan",
+              "Di mana?",
+              "Pukul berapa?"
+            ]
+          },
+          {
+            "title": "Percakapan 5 dari 5",
+            "objective": "Tutup pesan izin dengan ucapan terima kasih.",
+            "cards": [
+              {
+                "text": "Terima kasih",
+                "kind": "salam"
+              },
+              {
+                "text": "atas",
+                "kind": "pel"
+              },
+              {
+                "text": "pengertian",
+                "kind": "o"
+              },
+              {
+                "text": "Ibu",
+                "kind": "sapaan"
+              },
+              {
+                "text": "besok",
+                "kind": "k",
+                "distractor": true
+              },
+              {
+                "text": "bermain",
+                "kind": "p",
+                "distractor": true
+              }
+            ],
+            "target": [
+              "Terima kasih",
+              "atas",
+              "pengertian",
+              "Ibu"
+            ],
+            "targetSentence": "Terima kasih atas pengertian Ibu.",
+            "hintText": "Mulai dari ungkapan terima kasih, lalu hal yang disyukuri, lalu sapaan.",
+            "wrongHintText": "Hampir tepat! Sapaan untuk Ibu Pembimbing diletakkan paling akhir.",
+            "slotLabels": [
+              "Ungkapan",
+              "Penghubung",
+              "Apa?",
+              "Kepada siapa?"
+            ]
+          }
+        ],
+        "responses": [
+          [
+            {
+              "who": "student",
+              "text": "Selamat pagi, Bu."
+            },
+            {
+              "who": "other",
+              "text": "Selamat pagi. Ada apa, Naya?"
+            },
+            {
+              "who": "wika",
+              "text": "Sekarang sampaikan izinmu dengan jelas."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Saya izin datang terlambat hari ini."
+            },
+            {
+              "who": "other",
+              "text": "Baik. Boleh Ibu tahu alasannya?"
+            },
+            {
+              "who": "wika",
+              "text": "Jelaskan alasannya agar pesan lebih lengkap."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "karena saya harus kontrol ke dokter gigi."
+            },
+            {
+              "who": "other",
+              "text": "Oh, semoga lancar kontrolnya. Kira-kira pukul berapa kamu tiba di kantor?"
+            },
+            {
+              "who": "wika",
+              "text": "Beri kepastian waktu supaya Ibu Pembimbing bisa mengatur pekerjaanmu."
+            }
+          ],
+          [
+            {
+              "who": "student",
+              "text": "Saya akan tiba di kantor pukul sepuluh."
+            },
+            {
+              "who": "other",
+              "text": "Baik, Ibu catat ya. Tugas pagimu akan Ibu geser ke setelah kamu tiba."
+            },
+            {
+              "who": "wika",
+              "text": "Izinmu diterima dengan baik! Tutup dengan terima kasih."
+            }
+          ]
+        ],
+        "ending": [
+          {
+            "who": "student",
+            "text": "Terima kasih atas pengertian Ibu."
+          },
+          {
+            "who": "other",
+            "text": "Sama-sama, Naya. Terima kasih sudah memberi tahu lebih awal dan lengkap. Hati-hati di jalan!"
+          },
+          {
+            "who": "student",
+            "text": "Baik, Bu. Sampai bertemu di kantor."
+          },
+          {
+            "who": "wika",
+            "text": "Lima pesan Naya tersusun rapi: izin yang lengkap dan profesional! 🎉"
+          }
+        ],
+        "roundLabels": [
+          "Salam",
+          "Izin",
+          "Alasan",
+          "Kepastian",
+          "Penutup"
+        ],
+        "fullMessage": "Selamat pagi, Bu. Saya izin datang terlambat hari ini karena saya harus kontrol ke dokter gigi. Saya akan tiba di kantor pukul sepuluh. Terima kasih atas pengertian Ibu."
+      },
+      "independent": {
+        "kind": "chat",
+        "contactName": "Ibu Pembimbing Magang",
+        "instruction": "Kamu harus kontrol ke dokter pagi ini. Tulis pesan izin yang lengkap kepada pembimbing magang: izin terlambat, alasannya, dan pukul berapa kamu tiba.",
+        "placeholder": "Tulis pesanmu di sini..."
+      },
+      "published": true
+    }
+  ]
+}
