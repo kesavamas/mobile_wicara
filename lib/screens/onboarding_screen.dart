@@ -1,409 +1,418 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wicara_application_1/widgets/wika_mascot.dart';
+import 'package:wicara_application_1/core/theme/app_colors.dart';
 import 'package:wicara_application_1/screens/login_screen.dart';
+import 'package:wicara_application_1/widgets/wika_mascot.dart';
 
-class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({Key? key}) : super(key: key);
+class OnboardingScreen extends StatelessWidget {
+  const OnboardingScreen({super.key});
 
-  @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
-}
-
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  int _currentStep = 0;
-
-  final List<Map<String, dynamic>> _slides = [
-    {
-      'title': 'Belajar Menyusun Pesan Formal',
-      'desc': 'Latih cara menyampaikan pesan untuk sekolah, magang, dan dunia kerja.',
-      'mood': WikaMood.welcome,
-    },
-    {
-      'title': 'Belajar Lewat Misi Petualangan',
-      'desc': 'Selesaikan kasus satu per satu dan buka tantangan berikutnya.',
-      'mood': WikaMood.point,
-    },
-    {
-      'title': 'Belajar Tanpa Takut Salah',
-      'desc': 'Petunjuk warna akan membantu kamu merapikan susunan kalimat.',
-      'mood': WikaMood.hint,
-    },
-  ];
-
-  Future<void> _completeOnboarding() async {
+  Future<void> _completeOnboarding(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_completed', true);
-    if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-      );
-    }
+    if (!context.mounted) return;
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder<void>(
+        transitionDuration: const Duration(milliseconds: 320),
+        pageBuilder: (_, animation, secondaryAnimation) => const LoginScreen(),
+        transitionsBuilder: (_, animation, secondaryAnimation, child) =>
+            FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.04, 0),
+                  end: Offset.zero,
+                ).animate(animation),
+                child: child,
+              ),
+            ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final slide = _slides[_currentStep];
-
     return Scaffold(
-      body: Stack(
-        children: [
-          // Aurora Gradient Background
-          Positioned.fill(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFEEF3FF),
+      backgroundColor: const Color(0xFFEEF3FF),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 430),
+          child: Stack(
+            children: [
+              const Positioned(
+                right: -100,
+                top: 120,
+                child: _SoftCircle(size: 260, color: Color(0x1A6C4FD3)),
               ),
-            ),
-          ),
-          // Blur Circles simulation
-          Positioned(
-            top: -80,
-            left: -80,
-            width: 320,
-            height: 320,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFC7D5FF).withOpacity(0.5),
-                shape: BoxShape.circle,
+              const Positioned(
+                left: -90,
+                bottom: 120,
+                child: _SoftCircle(size: 230, color: Color(0x1834B584)),
               ),
-            ),
-          ),
-          Positioned(
-            top: 200,
-            right: -80,
-            width: 288,
-            height: 288,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFDDD6FE).withOpacity(0.45),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -80,
-            left: 30,
-            width: 256,
-            height: 256,
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFFBAF0D9).withOpacity(0.35),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-
-          // Decorative Floating Word Chips
-          Positioned(
-            left: 20,
-            top: 150,
-            child: _buildFloatingChip('S · Saya', const Color(0xFFEAF2FF), const Color(0xFF4D91FF), const Color(0xFF163E8C)),
-          ),
-          Positioned(
-            right: 20,
-            top: 130,
-            child: _buildFloatingChip('P · izin', const Color(0xFFFFECEF), const Color(0xFFD9485F), const Color(0xFF8B2235)),
-          ),
-          Positioned(
-            left: 15,
-            bottom: 240,
-            child: _buildFloatingChip('K · hari ini', const Color(0xFFFFF4D6), const Color(0xFFE5A91D), const Color(0xFF6A4C00)),
-          ),
-          Positioned(
-            right: 15,
-            bottom: 200,
-            child: _buildFloatingChip('O · sekolah', const Color(0xFFE8F8F1), const Color(0xFF1F9D70), const Color(0xFF145B42)),
-          ),
-
-          // Core UI Content
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Brand Header
-                  Row(
-                    children: [
-                      Container(
-                        width: 36,
-                        height: 36,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF4C5FD7),
-                          borderRadius: BorderRadius.circular(14),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFF4C5FD7).withOpacity(0.3),
-                              blurRadius: 16,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: const Icon(
-                          Icons.chat_bubble_rounded,
-                          size: 19,
-                          color: Colors.white,
-                        ),
+              SafeArea(
+                child: LayoutBuilder(
+                  builder: (context, constraints) => SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight - 42,
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'WICARA',
-                              style: GoogleFonts.plusJakartaSans(
-                                textStyle: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 1.2,
-                                  color: Color(0xFF3445AC),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              'Susun Kata, Sampaikan Makna.',
-                              style: GoogleFonts.inter(
-                                textStyle: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF5D6785),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const _BrandHeader(),
+                          const SizedBox(height: 30),
+                          const _MascotIntroduction(),
+                          const SizedBox(height: 22),
+                          const _LearningCard(),
+                          const SizedBox(height: 28),
+                          _StartButton(
+                            onPressed: () => _completeOnboarding(context),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-
-                  // Mascot & Slide Cards Space
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        WikaMascot(
-                          key: ValueKey<int>(_currentStep),
-                          mood: slide['mood'] as WikaMood,
-                          size: 100,
-                        ),
-                        const SizedBox(height: 12),
-
-                        // Mascot Speech Bubble
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFD4DCFF)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF4263EB).withOpacity(0.06),
-                                blurRadius: 16,
-                                offset: const Offset(0, 8),
-                              ),
-                            ],
-                          ),
-                          child: Text(
-                            '"Yuk, lanjutkan petualangan komunikasimu!"',
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF667085),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Slide Text Card
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(28),
-                            border: Border.all(color: const Color(0xFFD4DCFF)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF4263EB).withOpacity(0.08),
-                                blurRadius: 40,
-                                offset: const Offset(0, 16),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                slide['title'] as String,
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w800,
-                                  color: const Color(0xFF24304A),
-                                  height: 1.25,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                slide['desc'] as String,
-                                style: GoogleFonts.inter(
-                                  fontSize: 13,
-                                  color: const Color(0xFF667085),
-                                  height: 1.5,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Row(
-                                children: [
-                                  _buildSampleChip('Saya', const Color(0xFFEAF2FF), const Color(0xFF4D91FF), const Color(0xFF163E8C)),
-                                  const SizedBox(width: 4),
-                                  _buildSampleChip('izin', const Color(0xFFFFECEF), const Color(0xFFD9485F), const Color(0xFF8B2235)),
-                                  const SizedBox(width: 4),
-                                  _buildSampleChip('sekolah', const Color(0xFFE8F8F1), const Color(0xFF1F9D70), const Color(0xFF145B42)),
-                                  const SizedBox(width: 4),
-                                  _buildSampleChip('hari ini', const Color(0xFFFFF4D6), const Color(0xFFE5A91D), const Color(0xFF6A4C00)),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                '→ kalimat formal ✓',
-                                style: GoogleFonts.inter(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF98A2B3),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
                     ),
                   ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
-                  // Bottom Navigation Actions
-                  Column(
-                    children: [
-                      // Steps indicator dots
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(_slides.length, (index) {
-                          final active = index == _currentStep;
-                          return AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            height: 8,
-                            width: active ? 28 : 8,
-                            decoration: BoxDecoration(
-                              color: active ? const Color(0xFF4263EB) : const Color(0xFFD0D5DD),
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                          );
-                        }),
-                      ),
-                      const SizedBox(height: 24),
+class _BrandHeader extends StatelessWidget {
+  const _BrandHeader();
 
-                      // Next Button (Chunky Style)
-                      GestureDetector(
-                        onTap: () {
-                          if (_currentStep < _slides.length - 1) {
-                            setState(() {
-                              _currentStep++;
-                            });
-                          } else {
-                            _completeOnboarding();
-                          }
-                        },
-                        child: Container(
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF4C5FD7),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color(0xFF3445AC),
-                                offset: Offset(0, 6),
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _currentStep < _slides.length - 1 ? 'Lanjut' : 'Mulai Belajar',
-                                  style: GoogleFonts.plusJakartaSans(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Icon(
-                                  _currentStep < _slides.length - 1 ? Icons.arrow_forward_rounded : Icons.auto_awesome_rounded,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                    ],
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 44,
+          height: 44,
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: AppColors.indigo,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x304C5FD7),
+                blurRadius: 15,
+                offset: Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Image.asset('assets/logo.png', semanticLabel: 'Logo WICARA'),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          'WICARA',
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 18,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.w800,
+            color: AppColors.indigoDark,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            'Susun Kata, Sampaikan Makna.',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.nunitoSans(
+              fontSize: 10,
+              fontWeight: FontWeight.w800,
+              color: AppColors.text2,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MascotIntroduction extends StatelessWidget {
+  const _MascotIntroduction();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 238,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          const Positioned(
+            left: 4,
+            top: 34,
+            child: _FloatingWord(
+              text: 'S - Saya',
+              color: Color(0xFF3D73DB),
+              background: Color(0xFFEAF2FF),
+            ),
+          ),
+          const Positioned(
+            right: 4,
+            top: 3,
+            child: _FloatingWord(
+              text: 'P - izin',
+              color: Color(0xFFD94865),
+              background: Color(0xFFFFECEF),
+            ),
+          ),
+          const Positioned(
+            top: 22,
+            child: WikaMascot(mood: WikaMood.welcome, size: 128),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 42,
+            right: 42,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0xFFC9D3FF)),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x124C5FD7),
+                    blurRadius: 18,
+                    offset: Offset(0, 8),
                   ),
                 ],
               ),
+              child: Text(
+                '"Hai! Aku Wika, teman belajarmu."',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunitoSans(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.text2,
+                ),
+              ),
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildFloatingChip(String text, Color bg, Color border, Color textClr) {
+class _LearningCard extends StatelessWidget {
+  const _LearningCard();
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: border, width: 1.5),
-        boxShadow: [
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(26),
+        border: Border.all(color: const Color(0xFFCFD8F6)),
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+            color: Color(0x124C5FD7),
+            blurRadius: 28,
+            offset: Offset(0, 12),
           ),
         ],
       ),
-      child: Text(
-        text,
-        style: GoogleFonts.inter(
-          fontSize: 12,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Belajar Menyusun Pesan Formal',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 20,
+              height: 1.3,
+              fontWeight: FontWeight.w800,
+              color: AppColors.ink,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Susun kata menjadi kalimat yang jelas dan sopan melalui misi seru untuk sekolah, magang, dan dunia kerja.',
+            style: GoogleFonts.nunitoSans(
+              fontSize: 13,
+              height: 1.5,
+              fontWeight: FontWeight.w700,
+              color: AppColors.text2,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Wrap(
+            spacing: 6,
+            runSpacing: 7,
+            children: [
+              _SentenceToken(
+                text: 'Saya',
+                color: Color(0xFF3D73DB),
+                background: Color(0xFFEAF2FF),
+              ),
+              _SentenceToken(
+                text: 'izin',
+                color: Color(0xFFD94865),
+                background: Color(0xFFFFECEF),
+              ),
+              _SentenceToken(
+                text: 'sekolah',
+                color: Color(0xFF19845F),
+                background: Color(0xFFE8F8F1),
+              ),
+              _SentenceToken(
+                text: 'hari ini',
+                color: Color(0xFFC28A00),
+                background: Color(0xFFFFF4CC),
+              ),
+            ],
+          ),
+          const SizedBox(height: 9),
+          Row(
+            children: [
+              const Icon(
+                Icons.arrow_forward_rounded,
+                size: 15,
+                color: AppColors.muted,
+              ),
+              const SizedBox(width: 5),
+              Text(
+                'kalimat formal',
+                style: GoogleFonts.nunitoSans(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.muted,
+                ),
+              ),
+              const SizedBox(width: 5),
+              const Icon(
+                Icons.check_circle_outline_rounded,
+                size: 14,
+                color: AppColors.success,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StartButton extends StatelessWidget {
+  final VoidCallback onPressed;
+
+  const _StartButton({required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.icon(
+      onPressed: onPressed,
+      iconAlignment: IconAlignment.end,
+      icon: const Icon(Icons.arrow_forward_rounded),
+      label: const Text('Mulai Sekarang'),
+      style: FilledButton.styleFrom(
+        backgroundColor: AppColors.indigo,
+        foregroundColor: Colors.white,
+        minimumSize: const Size.fromHeight(56),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(17)),
+        elevation: 5,
+        shadowColor: AppColors.indigoDark,
+        textStyle: GoogleFonts.plusJakartaSans(
+          fontSize: 15,
           fontWeight: FontWeight.w800,
-          color: textClr,
         ),
       ),
     );
   }
+}
 
-  Widget _buildSampleChip(String text, Color bg, Color border, Color textClr) {
+class _FloatingWord extends StatelessWidget {
+  final String text;
+  final Color color;
+  final Color background;
+
+  const _FloatingWord({
+    required this.text,
+    required this.color,
+    required this.background,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: text.startsWith('S') ? -0.05 : 0.05,
+      child: _SentenceToken(
+        text: text,
+        color: color,
+        background: background,
+        large: true,
+      ),
+    );
+  }
+}
+
+class _SentenceToken extends StatelessWidget {
+  final String text;
+  final Color color;
+  final Color background;
+  final bool large;
+
+  const _SentenceToken({
+    required this.text,
+    required this.color,
+    required this.background,
+    this.large = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(
+        horizontal: large ? 13 : 10,
+        vertical: large ? 8 : 6,
+      ),
       decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: border),
+        color: background,
+        borderRadius: BorderRadius.circular(99),
+        border: Border.all(color: color, width: 1.4),
+        boxShadow: large
+            ? const [
+                BoxShadow(
+                  color: Color(0x1424304A),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ]
+            : null,
       ),
       child: Text(
         text,
-        style: GoogleFonts.inter(
-          fontSize: 10,
-          fontWeight: FontWeight.w800,
-          color: textClr,
+        style: GoogleFonts.nunitoSans(
+          fontSize: large ? 12 : 10,
+          fontWeight: FontWeight.w900,
+          color: color,
         ),
       ),
+    );
+  }
+}
+
+class _SoftCircle extends StatelessWidget {
+  final double size;
+  final Color color;
+
+  const _SoftCircle({required this.size, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
     );
   }
 }

@@ -10,12 +10,16 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wicara_application_1/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Login screen smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp(isLoggedIn: false, showOnboarding: false));
+    await tester.pumpWidget(
+      const MyApp(isLoggedIn: false, showOnboarding: false),
+    );
 
     // Verify that our login screen is shown.
-    expect(find.text('WICARA'), findsOneWidget);
-    expect(find.text('Masuk'), findsOneWidget);
+    expect(find.text('Masuk ke Kelasmu'), findsOneWidget);
+    expect(find.text('Token dari Guru'), findsOneWidget);
+    expect(find.text('Masuk ke Kelas'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
   });
 }

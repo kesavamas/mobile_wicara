@@ -1,40 +1,46 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wicara_application_1/screens/main_layout.dart';
 import 'package:wicara_application_1/screens/login_screen.dart';
 import 'package:wicara_application_1/screens/onboarding_screen.dart';
-import 'package:wicara_application_1/services/session_service.dart';
+import 'package:wicara_application_1/screens/splash_screen.dart';
 
-void main() async {
+// Mode pratinjau dengan frame device (mis. iPhone 16) untuk dicoba di Chrome/desktop.
+// Aktifkan dengan: flutter run -d chrome --dart-define=DEVICE_PREVIEW=true
+const bool kDevicePreview = bool.fromEnvironment(
+  // 'DEVICE_PREVIEW',
+  'DEVICE_PREVIEW',
+  defaultValue: false,
+);
+
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  const app = MyApp();
 
-  final loggedIn = await SessionService.isLoggedIn();
-  
-  final prefs = await SharedPreferences.getInstance();
-  final onboardingCompleted = prefs.getBool('onboarding_completed') ?? false;
-
-  runApp(MyApp(
-    isLoggedIn: loggedIn,
-    showOnboarding: !onboardingCompleted,
-  ));
+  runApp(
+    kDevicePreview
+        ? DevicePreview(
+            defaultDevice: Devices.ios.iPhone16,
+            builder: (context) => app,
+          )
+        : app,
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final bool isLoggedIn;
-  final bool showOnboarding;
+  final bool? isLoggedIn;
+  final bool? showOnboarding;
 
-  const MyApp({
-    super.key,
-    required this.isLoggedIn,
-    required this.showOnboarding,
-  });
+  const MyApp({super.key, this.isLoggedIn, this.showOnboarding});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'WICARA',
       debugShowCheckedModeBanner: false,
+      locale: kDevicePreview ? DevicePreview.locale(context) : null,
+      builder: kDevicePreview ? DevicePreview.appBuilder : null,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         colorScheme: ColorScheme.fromSeed(
@@ -68,9 +74,13 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: showOnboarding
+      home: isLoggedIn == null || showOnboarding == null
+          ? const SplashScreen()
+          : showOnboarding!
           ? const OnboardingScreen()
-          : (isLoggedIn ? const MainLayout() : const LoginScreen()),
+          : isLoggedIn!
+          ? const MainLayout()
+          : const LoginScreen(),
     );
   }
 }
